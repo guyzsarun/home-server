@@ -1,0 +1,20 @@
+name: terraform lint
+
+
+on:
+  push:
+
+  workflow_dispatch:
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: init
+        run: terraform init
+
+      - name: validate
+        run: terraform validate
