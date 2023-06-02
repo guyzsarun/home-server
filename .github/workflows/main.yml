@@ -15,7 +15,7 @@ jobs:
         uses: hashicorp/setup-packer@main
         id: setup
         with:
-          version: ${{ env.PRODUCT_VERSION }}
+          version: 1.8.6
 
       - name: Run `packer init`
         id: init
