@@ -7,12 +7,23 @@ on:
 
 jobs:
   packer:
-    runs-on: hashicorp/packer:1.8.6
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
-      - name: validate
-        run: cd packer && packer validate .
+      - name: Setup `packer`
+        uses: hashicorp/setup-packer@main
+        id: setup
+        with:
+          version: ${{ env.PRODUCT_VERSION }}
+
+      - name: Run `packer init`
+        id: init
+        run: "cd packer && packer init ."
+
+      - name: Run `packer validate`
+        id: validate
+        run: "cd packer && packer validate ."
 
   terraform:
     runs-on: ubuntu-latest
