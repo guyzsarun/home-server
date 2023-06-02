@@ -1,12 +1,19 @@
 name: main
 
-
 on:
   push:
 
   workflow_dispatch:
 
 jobs:
+  pakcer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: validate
+        run: cd packer && packer validate .
+
   terraform:
     runs-on: ubuntu-latest
 
@@ -18,3 +25,4 @@ jobs:
 
       - name: validate
         run: terraform validate
+
