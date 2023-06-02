@@ -17,6 +17,11 @@ jobs:
         with:
           version: 1.8.6
 
+
+      - name: Run `packer init`
+        id: init2
+        run: "packer version"
+
       - name: Run `packer init`
         id: init
         run: "cd packer && packer init ."
