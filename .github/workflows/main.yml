@@ -11,16 +11,11 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Setup `packer`
-        uses: hashicorp/setup-packer@main
-        id: setup
-        with:
-          version: 1.8.6
-
-
-      - name: Run `packer init`
-        id: init2
-        run: "packer version"
+      # - name: Setup `packer`
+      #   uses: hashicorp/setup-packer@main
+      #   id: setup
+      #   with:
+      #     version: 1.8.6
 
       - name: Run `packer init`
         id: init
@@ -32,7 +27,6 @@ jobs:
 
   terraform:
     runs-on: ubuntu-latest
-
     steps:
       - uses: actions/checkout@v3
 
