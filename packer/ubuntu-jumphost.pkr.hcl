@@ -27,6 +27,7 @@ source "proxmox-iso" "ubuntu-server-docker" {
          disk_size = "20G"
          storage_pool = "local-lvm"
          type = "scsi"
+         storage_pool_type = "lvm"
     }
 
     cores = "2"
