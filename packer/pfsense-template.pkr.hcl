@@ -25,7 +25,6 @@ source "proxmox-iso" "pfsense-template" {
         type="scsi"
         disk_size="10G"
         storage_pool="local-lvm"
-        storage_pool_type="lvm"
     }
 
     # Network
