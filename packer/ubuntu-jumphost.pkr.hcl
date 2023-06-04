@@ -1,43 +1,42 @@
 source "proxmox-iso" "ubuntu-server-docker" {
+    # ID
+    node = "pve"
+    template_name = "ubuntu-server-docker"
+    template_description = "Ubuntu Server Jumphost"
+
+    # Proxmox Access configuration
     proxmox_url = "${var.proxmox_api_url}"
     username = "${var.proxmox_user}"
     password = "${var.proxmox_password}"
     insecure_skip_tls_verify = true
 
-    node = "pve"
-
-    vm_name = "ubuntu-server-docker"
-    template_description = "Ubuntu Server Jumphost"
-
+    # Base ISO File configuration
     iso_url = "https://releases.ubuntu.com/jammy/ubuntu-22.04.2-live-server-amd64.iso"
     iso_checksum = "5e38b55d57d94ff029719342357325ed3bda38fa80054f9330dc789cd2d43931"
-
-    #iso_download_pve = true
-
-
+    iso_download_pve = true
     iso_storage_pool = "local"
     unmount_iso = true
 
     qemu_agent = true
 
+    # System
+    cores = 2
+    memory = 2048
 
     scsi_controller = "virtio-scsi-pci"
 
+    # Storage
     disks {
          disk_size = "20G"
          storage_pool = "local-lvm"
          type = "scsi"
-         storage_pool_type = "lvm"
     }
-
-    cores = "2"
-
-    memory = "2048"
 
     # VM Network Settings
     network_adapters {
          bridge = "vmbr1"
          firewall = "false"
+         model = "virtio"
     }
 
     cloud_init = true

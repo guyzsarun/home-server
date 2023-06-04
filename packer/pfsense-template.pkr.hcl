@@ -1,7 +1,7 @@
 source "proxmox-iso" "pfsense-template" {
     # ID
-    template_name = "pfsense-${var.pfsense_version}-template"
     node = "pve"
+    template_name = "pfsense-${var.pfsense_version}-template"
     template_description = "pfSense router for home-server"
 
     # Proxmox Access configuration
@@ -17,8 +17,8 @@ source "proxmox-iso" "pfsense-template" {
 
 
     # System
-    memory = 1024
     cores = 1
+    memory = 1024
 
     # Storage
     disks {
@@ -27,7 +27,7 @@ source "proxmox-iso" "pfsense-template" {
         storage_pool="local-lvm"
     }
 
-    # Network
+    # VM Network Settings
     network_adapters {
             model = "virtio"
             bridge = "vmbr0"
