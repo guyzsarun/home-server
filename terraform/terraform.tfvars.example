@@ -1,0 +1,8 @@
+proxmox_api_url = "https://192.168.1.1:8006/api2/json"
+proxmox_user = "devops@pam"
+proxmox_password = ""
+
+proxmox_ip = ""
+proxmox_ssh_user = ""
+
+pfsense_version="2.5.2"
