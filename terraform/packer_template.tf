@@ -50,3 +50,19 @@ resource "null_resource" "packer_ubuntu_template" {
         command = "cd ${path.cwd}/packer && packer build -only '*ubuntu*' ."
     }
 }
+
+resource "null_resource" "talos_base_image" {
+
+    provisioner "remote-exec" {
+        inline = [
+            "cd /var/lib/vz/template/iso",
+            "wget -O talos-kubernetes-${var.talos_version}.iso https://github.com/siderolabs/talos/releases/download/${var.talos_version}/talos-amd64.iso",
+        ]
+        connection {
+            type     = "ssh"
+            user     = "${var.proxmox_ssh_user}"
+            password = "${var.proxmox_password}"
+            host     = "${var.proxmox_ip}"
+        }
+    }
+}

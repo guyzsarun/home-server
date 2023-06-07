@@ -32,3 +32,19 @@ variable "pfsense_version" {
 variable "pfsense_checksum" {
     default = "941a68c7f20c4b635447cceda429a027f816bdb78d54b8252bb87abf1fc22ee3"
 }
+
+variable "talos_version" {
+  default = "v1.4.4"
+}
+
+variable "talos_master_ip" {
+    default = "192.168.1.1"
+}
+
+variable "talos_worker_ip" {
+  type    = list
+  default = ["192.168.1.2", "192.168.1.3", "192.168.1.4"]
+}
+variable "talos_worker_count" {
+  default = "2"
+}
