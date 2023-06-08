@@ -76,3 +76,74 @@ resource "proxmox_vm_qemu" "ubuntu-server_vm" {
 
     ipconfig0 = "ip=dhcp"
 }
+resource "proxmox_vm_qemu" "kubernetes-master_vm" {
+    # Clone and metadata config
+    name  = "kubernetes-master"
+    vmid   = 301
+    target_node = "pve"
+    qemu_os = "other"
+
+    onboot = true
+    tags = "kubernetes"
+
+    iso = "local:iso/talos-kubernetes-${var.talos_version}.iso"
+
+    # System
+    memory = 4096
+    cores = 2
+    cpu = "host"
+    scsihw = "virtio-scsi-single"
+
+    disk {
+      type = "scsi"
+      size = "10G"
+      storage = "local-lvm"
+    }
+
+    # LAN
+    network {
+      model = "virtio"
+      bridge = "vmbr1"
+      firewall = false
+     }
+
+    depends_on = [
+      null_resource.talos_base_image,
+    ]
+}
+
+resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
+    # Clone and metadata config
+    count = "${var.talos_worker_count}"
+    name  = "kubernetes-worker-${count.index + 1}"
+    vmid   = "${count.index + 302}"
+    qemu_os = "other"
+
+    target_node = "pve"
+    onboot = true
+    tags = "kubernetes"
+
+    iso = "local:iso/talos-kubernetes-${var.talos_version}.iso"
+
+    # System
+    memory = 2048
+    cores = 2
+    cpu = "host"
+    scsihw = "virtio-scsi-single"
+
+    # LAN
+     network {
+      model = "virtio"
+      bridge = "vmbr1"
+      firewall = false
+     }
+
+    disk {
+      type = "scsi"
+      size = "5G"
+      storage = "local-lvm"
+    }
+    depends_on = [
+      proxmox_vm_qemu.kubernetes-master_vm,
+    ]
+}
