@@ -28,15 +28,18 @@ resource "null_resource" "talos_kubeconfig" {
         command = <<-EOF
         talosctl config endpoint ${var.talos_master_ip}
         talosctl config node ${var.talos_master_ip}
-        talosctl --talosconfig _talos/talosconfig config endpoint ${var.talos_master_ip}
-        talosctl --talosconfig _talos/talosconfig config node ${var.talos_master_ip}
-        talosctl --talosconfig _talos/talosconfig bootstrap
-        talosctl --talosconfig _talos/talosconfig kubeconfig _talos
+        talosctl config endpoint ${var.talos_master_ip}
+        talosctl config node ${var.talos_master_ip}
+        talosctl bootstrap
+        talosctl kubeconfig _talos
         EOF
     }
+      provisioner "local-exec" {
+        environment = {
+            NODE_IP=join (" ",concat(var.talos_worker_ip,[var.talos_master_ip]))
+        }
+        interpreter = ["/bin/bash", "-c"]
+        command = "for item in $NODE_IP; do talosctl --talosconfig _talos/talosconfig -n $item patch machineconfig --patch-file ./_talos/kubelet-patch.yaml; done"
+    }
 }
-
-
-
-
 
