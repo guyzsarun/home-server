@@ -14,7 +14,6 @@ Project Structure
 
 
 ## Pfsense Router
----
 Pfsense router with zerotier plugin for VPC
 
 Start and Join zerotier network
@@ -33,8 +32,6 @@ Network Interface
 
 
 ## Kubernetes Cluster
----
-
 1. Provision [Talos](https://www.talos.dev/) kubernetes vm
 
 ```
