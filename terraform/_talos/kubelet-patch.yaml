@@ -1,0 +1,4 @@
+# kubelet-patch.yaml
+- op: replace
+  path: /machine/kubelet/extraArgs
+  value: {"rotate-server-certificates": "true"}

@@ -1,8 +1,15 @@
-proxmox_api_url = "https://192.168.1.1:8006/api2/json"
-proxmox_user = "devops@pam"
-proxmox_password = ""
+proxmox_api_url         = "https://192.168.1.1:8006/api2/json"
+proxmox_user            = "devops@pam"
+proxmox_password        =
+proxmox_ip              =
+proxmox_ssh_user        =
 
-proxmox_ip = ""
-proxmox_ssh_user = ""
 
-pfsense_version="2.5.2"
+# pfsense
+pfsense_version         = "2.5.2"
+
+# talos kubernetes cluster
+talos_version           =
+talos_worker_count      = 1
+talos_master_ip         =
+talos_worker_ip         = [ ]
