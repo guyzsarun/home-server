@@ -1,0 +1,19 @@
+---
+- name: Install docker / docker-compose
+  hosts: ubuntu-server
+  vars:
+    HARBOR_VERSION: v2.8.2
+
+  tasks:
+  - become: true
+    become_method: sudo
+    apt:
+      name:
+        - docker
+        - docker-compose-plugin
+      state: present
+      update_cache: yes
+  - ansible.builtin.unarchive:
+      src: https://github.com/goharbor/harbor/releases/download/{{ HARBOR_VERSION }}/harbor-offline-installer-{{ HARBOR_VERSION }}.tgz
+      dest: /home/devops
+      remote_src: yes
