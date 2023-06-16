@@ -1,0 +1,11 @@
+---
+- name: ping
+  hosts: ubuntu-server
+
+  tasks:
+  - ansible.builtin.ping:
+  - debug:
+      msg:
+      - "hostname : {{ ansible_hostname }}"
+      - "architecture : {{ ansible_architecture  }} {{ ansible_distribution }}"
+      - "ipv4 :{{ ansible_all_ipv4_addresses }} "
