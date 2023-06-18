@@ -57,4 +57,7 @@ terraform -chdir=./terraform apply -target null_resource.talos_kubeconfig
 5. (Optional) Apply base kubernetes cluster config
 ```
 kubectl apply -f ./kubernetes
+
+# install istio
+istioctl install -f istio-config.yaml
 ```
