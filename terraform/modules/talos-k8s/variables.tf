@@ -11,7 +11,7 @@ variable "proxmox_config" {
 }
 
 variable "talos" {
-  type = map(string)
+  type = any
   default = {
     "version"      = "v1.4.4"
     "worker_count" = 2
