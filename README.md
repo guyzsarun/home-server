@@ -50,7 +50,7 @@ terraform -chdir=./terraform apply -target module.talos-k8s
 talos_master_ip = ""
 talos_worker_ip = [ "" ]
 ```
-3. Initialize/patch Talos Kubernetes clusters
+3. Initialize/patch Talos Kubernetes cluster
 
 ```
 terraform -chdir=./terraform apply -target module.talos-patch
