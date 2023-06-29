@@ -6,12 +6,16 @@ module "talos-k8s" {
 
 }
 
+module "talos-patch" {
+  source = "./modules/talos-patch"
+
+  talos      = var.talos
+  depends_on = [module.talos-k8s]
+}
+
 module "kubernetes" {
-  source = "./modules/kubernetes"
-
-  talos          = var.talos
-  depends_on = [ module.talos-k8s ]
-
+  source     = "./modules/kubernetes"
+  depends_on = [module.talos-patch]
 }
 
 module "vm-templates" {

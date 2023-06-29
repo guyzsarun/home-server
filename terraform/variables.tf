@@ -1,5 +1,5 @@
 variable "proxmox_config" {
-  type      = map(any)
+  type      = map(string)
   sensitive = true
   default = {
     api_url  = "https://proxmox-server01.example.com:8006/api2/json"
@@ -23,7 +23,12 @@ variable "talos" {
   default = {
     "version"      = "v1.4.4"
     "worker_count" = 2
-    "master_ip" = "192.168.1.1"
-    "worker_ip" = ["192.168.1.2", "192.168.1.3", "192.168.1.4"]
+    "master_ip"    = "192.168.1.1"
+    "worker_ip"    = ["192.168.1.2", "192.168.1.3", "192.168.1.4"]
   }
+}
+
+variable "kubeconfig" {
+  type    = string
+  default = "_talos/kubeconfig"
 }

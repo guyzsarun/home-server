@@ -1,71 +1,86 @@
-resource "null_resource" "talos_kubernetes_setup" {
-    provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
-        command = "talosctl gen config talos-k8s-cluster https://${var.talos.master_ip}:6443 --output-dir _talos --force"
+terraform {
+  required_providers {
+    kubectl = {
+      source  = "gavinbunney/kubectl"
+      version = "1.14.0"
     }
-
-    provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
-        command = "talosctl apply-config --insecure --nodes ${var.talos.master_ip} --file _talos/controlplane.yaml"
+  }
+}
+resource "kubernetes_namespace" "metallb" {
+  metadata {
+    name = "metallb-system"
+    labels = {
+      "pod-security.kubernetes.io/enforce" = "privileged"
+      "pod-security.kubernetes.io/audit"   = "privileged"
+      "pod-security.kubernetes.io/warn"    = "privileged"
     }
-
-    provisioner "local-exec" {
-        environment = {
-            WORKER_NODE_IP=join (" ",var.talos.worker_ip)
-        }
-        interpreter = ["/bin/bash", "-c"]
-        command = "for item in $WORKER_NODE_IP; do talosctl apply-config --insecure --nodes $item --file _talos/worker.yaml; done"
-    }
-    provisioner "local-exec" {
-        when    = destroy
-        command = <<-EOF
-            rm -rf _talos/controlplane.yaml
-            rm -rf _talos/worker.yaml
-            rm -rf _talos/talosconfig
-        EOF
-    }
+  }
 }
 
 
-resource "null_resource" "delay" {
+
+resource "helm_release" "metallb" {
+  name       = "metallb"
+  repository = "https://metallb.github.io/metallb"
+  chart      = "metallb"
+  version    = "0.13.10"
+
+  namespace = kubernetes_namespace.metallb.metadata[0].name
+
+  set {
+    name  = "speaker.frr.enabled"
+    value = "false"
+  }
   provisioner "local-exec" {
-    command = "sleep 200s"
+    command = "echo 'Waiting CRDs' && sleep 60"
   }
-  triggers = {
-    "before" = null_resource.talos_kubernetes_setup.id
-  }
+  depends_on = [kubernetes_namespace.metallb]
 }
 
-resource "null_resource" "talos_kubeconfig" {
-    depends_on = [ null_resource.delay ]
-    provisioner "local-exec" {
-         environment = {
-            TALOSCONFIG="_talos/talosconfig"
-        }
-        command = <<-EOF
-        talosctl config endpoint ${var.talos.master_ip}
-        talosctl config node ${var.talos.master_ip}
-        talosctl bootstrap
-        talosctl kubeconfig _talos
-        EOF
-    }
-    provisioner "local-exec" {
-        when    = destroy
-        command = <<-EOF
-        rm -rf _talos/kubeconfig
-        EOF
-    }
-     provisioner "local-exec" {
-        environment = {
-            NODE_IP=join (" ",concat(var.talos.worker_ip,[var.talos.master_ip]))
-        }
-        interpreter = ["/bin/bash", "-c"]
-        command = "for item in $NODE_IP; do talosctl --talosconfig _talos/talosconfig -n $item patch machineconfig --patch-file ./_talos/kubelet-patch.yaml; done"
-    }
-     provisioner "local-exec" {
-        interpreter = ["/bin/bash", "-c"]
-        command = "talosctl --talosconfig _talos/talosconfig -n ${var.talos.master_ip} patch machineconfig --patch '[{'op': 'replace', 'path': '/machine/network/hostname', 'value': 'talos-control-plane'}]'"
-    }
+resource "kubectl_manifest" "metallb-pool" {
+  override_namespace = kubernetes_namespace.metallb.metadata[0].name
+  yaml_body          = <<YAML
+  apiVersion: "metallb.io/v1beta1"
+  kind: IPAddressPool
+  metadata:
+    name: metallb-pool
+  spec:
+    addresses: ["192.168.101.1-192.168.101.50"]
+  YAML
+  depends_on         = [helm_release.metallb]
 }
 
+resource "kubectl_manifest" "metallb-l2-advertisement" {
+  override_namespace = kubernetes_namespace.metallb.metadata[0].name
+  yaml_body          = <<YAML
+  apiVersion: "metallb.io/v1beta1"
+  kind: L2Advertisement
+  metadata:
+    name: metallb-l2-ip
+  YAML
+  depends_on         = [kubectl_manifest.metallb-pool, helm_release.metallb]
+}
 
+data "http" "kubelet-approver" {
+  url = "https://raw.githubusercontent.com/alex1989hu/kubelet-serving-cert-approver/main/deploy/standalone-install.yaml"
+}
+
+data "kubectl_file_documents" "metrics_server_doc" {
+  content = data.http.kubelet-approver.body
+}
+resource "kubectl_manifest" "kubelet-approver" {
+  for_each  = data.kubectl_file_documents.metrics_server_doc.manifests
+  yaml_body = each.value
+
+}
+
+resource "helm_release" "metrics-server" {
+  name       = "metrics-server"
+  repository = "https://kubernetes-sigs.github.io/metrics-server/"
+  chart      = "metrics-server"
+  version    = "3.10.0"
+
+  namespace = "kube-system"
+
+  depends_on = [kubectl_manifest.kubelet-approver]
+}
