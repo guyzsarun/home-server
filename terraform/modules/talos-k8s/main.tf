@@ -73,7 +73,7 @@ resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
   iso = "local:iso/talos-kubernetes-${var.talos.version}.iso"
 
   # System
-  memory = 4096
+  memory = 6000
   cores  = 2
   cpu    = "host"
   scsihw = "virtio-scsi-single"
@@ -87,7 +87,7 @@ resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
 
   disk {
     type    = "scsi"
-    size    = "5G"
+    size    = "10G"
     storage = "local-lvm"
   }
   depends_on = [
