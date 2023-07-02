@@ -7,7 +7,7 @@ spec:
   hosts:
   - "*"
   gateways:
-  - default-gateway
+  - istio-system/default-gateway
   http:
   - match:
     - uri:
