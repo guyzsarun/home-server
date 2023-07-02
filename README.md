@@ -63,7 +63,7 @@ terraform -chdir=./terraform apply -target module.kubernetes
 5. (Optional) Apply base kubernetes cluster config
 ```
 # install istio
-istioctl install -f ./kubernetes/istio-config.yaml 
+istioctl install -f ./kubernetes/istio/istio-config.yaml 
 
 kubectl apply -f ./kubernetes/monitoring
 ```
