@@ -159,7 +159,12 @@ spec:
               containerPort: 3000
               protocol: TCP
           env:
-
+            - name: "GF_SERVER_ROOT_URL"
+              value: "http://localhost:3000/grafana/"
+            - name: "GF_SERVER_DOMAIN"
+              value: "localhost"
+            - name: "GF_SERVER_SERVE_FROM_SUB_PATH"
+              value: "true"
             - name: "GF_AUTH_ANONYMOUS_ENABLED"
               value: "true"
             - name: "GF_AUTH_ANONYMOUS_ORG_ROLE"
