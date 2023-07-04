@@ -10,6 +10,12 @@ Project Structure
 ├── packer                              # packer vm templates
 └── terraform                           # terraform iac
     └── _talos                          # talos kubernetes cluster config
+    └── modules                         
+        └── kubernetes                  # kubernetes cluster essentials
+        └── talos-k8s                   # talos kubernetes vm
+        └── talos-patch                 # talos kubernetes vm patch
+        └── vm                          # jumphost / router vm
+        └── vm-templates                # vm templates
 ```
 
 
@@ -37,24 +43,27 @@ Network Interface
 ```
 terraform -chdir=./terraform plan
 
-terraform -chdir=./terraform apply -target proxmox_vm_qemu.kubernetes-worker_vm
+terraform -chdir=./terraform apply -target module.talos-k8s
 ```
 2. Update talos kubernetes master/worker ip in `terraform.tfvars` 
 ```
 talos_master_ip = ""
 talos_worker_ip = [ "" ]
 ```
-3. Initialize Talos Kubernetes clusters
+3. Initialize/patch Talos Kubernetes cluster
 
 ```
-terraform -chdir=./terraform apply -target null_resource.talos_kubernetes_setup
+terraform -chdir=./terraform apply -target module.talos-patch
 ```
-4. Get kubeconfig for the cluster
+4. Apply metrics-server / loadbalancer
 ```
-terraform -chdir=./terraform apply -target null_resource.talos_kubeconfig
+terraform -chdir=./terraform apply -target module.kubernetes
 ```
 
 5. (Optional) Apply base kubernetes cluster config
 ```
-kubectl apply -f ./kubernetes
+# install istio
+istioctl install -f ./kubernetes/istio/istio-config.yaml 
+
+kubectl apply -f ./kubernetes/monitoring
 ```
