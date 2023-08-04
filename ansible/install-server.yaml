@@ -1,19 +1,47 @@
 ---
-- name: Install docker / docker-compose
+- name: Install Server
   hosts: ubuntu-server
   vars:
     HARBOR_VERSION: v2.8.2
 
   tasks:
-  - become: true
+  - name: Install essentials
+    become: true
     become_method: sudo
     apt:
       name:
         - docker
-        - docker-compose-plugin
+        - net-tools
+        - docker-compose
       state: present
       update_cache: yes
-  - ansible.builtin.unarchive:
-      src: https://github.com/goharbor/harbor/releases/download/{{ HARBOR_VERSION }}/harbor-offline-installer-{{ HARBOR_VERSION }}.tgz
-      dest: /home/devops
-      remote_src: yes
+    tags:
+    - always
+  - name: Install, Config Harbor
+    tags: harbor
+    block:
+      - unarchive:
+          src: https://github.com/goharbor/harbor/releases/download/{{ HARBOR_VERSION }}/harbor-offline-installer-{{ HARBOR_VERSION }}.tgz
+          dest: /tmp
+          remote_src: yes
+      - copy:
+          src: /tmp/harbor
+          remote_src: true
+          dest: /home/devops/ansible
+      - copy:
+          src: ./config/
+          dest: /home/devops/ansible/harbor
+  - name: Install, Config minio
+    tags: minio
+    block:
+      - file:
+          path: /home/devops/minio/data
+          state: directory
+      - copy:
+          src: ./config/minio.yaml
+          dest: /home/devops/minio
+      - become: true
+        shell: |
+          cd /home/devops/minio
+          docker-compose -f minio.yaml up -d
+

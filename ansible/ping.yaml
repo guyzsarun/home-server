@@ -1,6 +1,6 @@
 ---
 - name: ping
-  hosts: ubuntu-server
+  hosts: all
 
   tasks:
   - ansible.builtin.ping:
