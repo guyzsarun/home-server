@@ -1,5 +1,11 @@
 variable "proxmox_config" {
-  type      = map(string)
+  type = object({
+    api_url  = string
+    ip       = string
+    user     = string
+    ssh_user = string
+    password = string
+  })
   sensitive = true
   default = {
     api_url  = "https://proxmox-server01.example.com:8006/api2/json"
