@@ -7,11 +7,11 @@
   tasks:
   - name: Install essentials
     become: true
-    become_method: sudo
     apt:
       name:
         - docker
         - net-tools
+        - gpg
         - docker-compose
       state: present
       update_cache: yes
@@ -27,10 +27,10 @@
       - copy:
           src: /tmp/harbor
           remote_src: true
-          dest: /home/devops/ansible
+          dest: /home/devops
       - copy:
           src: ./config/
-          dest: /home/devops/ansible/harbor
+          dest: /home/devops/harbor
   - name: Install, Config minio
     tags: minio
     block:
@@ -44,4 +44,16 @@
         shell: |
           cd /home/devops/minio
           docker-compose -f minio.yaml up -d
-
+  - name: Install, Config vault
+    tags: vault
+    block:
+      - become: true
+        shell: |
+            wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      - become: true
+        apt:
+          name:
+            - vault=1.4.*
+          state: present
+          update_cache: yes
