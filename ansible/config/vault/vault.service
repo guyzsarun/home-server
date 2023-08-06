@@ -1,0 +1,17 @@
+[Unit]
+Description=Hashicorp Vault for secrets
+After = network.target
+ConditionFileNotEmpty=/home/devops/vault/vault-config.hcl
+
+[Service]
+User=devops
+ExecStart=/usr/bin/vault server -config=/home/devops/vault/vault-config.hcl
+ExecReload=/usr/bin/kill --signal HUP $MAINPID
+CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
+Capabilities=CAP_IPC_LOCK+ep
+SecureBits=keep-caps
+NoNewPrivileges=yes
+KillSignal=SIGINT
+
+[Install]
+WantedBy = multi-user.target
