@@ -1,0 +1,1 @@
+sudo /home/devops/ansible/harbor/install.sh --with-trivy

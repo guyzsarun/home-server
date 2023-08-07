@@ -1,0 +1,106 @@
+---
+- name: Install Server
+  hosts: ubuntu-server
+  gather_facts: true
+  become: true
+  vars:
+    HARBOR_VERSION: v2.8.2
+    VAULT_KEY_SHARE: 5
+    VAULT_KEY_THRES: 3
+
+  tasks:
+  - name: Install essentials
+    apt:
+      name:
+        - docker
+        - net-tools
+        - gpg
+        - docker-compose
+      state: present
+      update_cache: yes
+    tags:
+    - always
+  - name: Install, Config Harbor
+    tags: harbor
+    block:
+      - unarchive:
+          src: https://github.com/goharbor/harbor/releases/download/{{ HARBOR_VERSION }}/harbor-offline-installer-{{ HARBOR_VERSION }}.tgz
+          dest: /tmp
+          remote_src: yes
+      - copy:
+          src: /tmp/harbor
+          remote_src: true
+          dest: /home/devops
+      - copy:
+          src: ./config/harbor/
+          dest: /home/devops/harbor
+  - name: Install, Config minio
+    tags: minio
+    block:
+      - file:
+          path: /home/devops/minio/data
+          state: directory
+      - copy:
+          src: ./config/minio/minio.yaml
+          dest: /home/devops/minio
+      - shell: |
+          cd /home/devops/minio
+          docker-compose -f minio.yaml up -d
+
+  - name: Install, Config vault
+    tags: vault
+    block:
+      - shell: |
+            wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
+      - apt:
+          name:
+            - vault=1.4.*
+          state: present
+          update_cache: yes
+
+      - file:
+          path: /home/devops/vault/data
+          state: directory
+
+      - copy:
+          src: ./config/vault/
+          dest: /home/devops/vault
+
+      - name: Copy systemd init file
+        copy:
+          src: ./config/vault/vault.service
+          dest: /etc/systemd/system
+          owner: root
+          group: root
+
+      - name: Start vault
+        systemd:
+          name: vault
+          state: restarted
+          enabled: true
+          daemon_reload: true
+
+      - shell: vault operator init -key-shares={{ VAULT_KEY_SHARE }} -key-threshold={{ VAULT_KEY_THRES }} -format=yaml
+        environment:
+          VAULT_ADDR: "http://127.0.0.1:8200"
+        register: token
+
+      - local_action:
+          module: copy
+          content: "{{ token.stdout }}"
+          dest:   ./config/vault/token
+
+      - name: Parse output of vault init
+        set_fact:
+          vault_init_parsed: "{{ token.stdout | from_yaml }}"
+
+      - name: Unseal vault
+        shell: |
+          vault operator unseal {{ item }}
+        environment:
+          VAULT_ADDR: "http://127.0.0.1:8200"
+        loop: "{{ vault_init_parsed.unseal_keys_b64[:VAULT_KEY_THRES] }}"
+
+      - debug:
+          msg: "export VAULT_ADDR=http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8200"

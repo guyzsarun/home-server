@@ -1,0 +1,15 @@
+version: '3'
+
+services:
+  minio:
+    image: quay.io/minio/minio:RELEASE.2023-07-21T21-12-44Z
+    ports:
+      - "9000:9000"
+      - "9090:9090"
+    restart: always
+    volumes:
+      - ./data:/data
+    environment:
+      MINIO_ROOT_USER: minio
+      MINIO_ROOT_PASSWORD: P@ssw0rd
+    command: server --console-address ":9090" /data

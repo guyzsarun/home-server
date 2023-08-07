@@ -6,6 +6,7 @@
 Project Structure
 ```
 .
+├── ansible                             # ansible playbook
 ├── kubernetes                          # kubernetes manifests
 ├── packer                              # packer vm templates
 └── terraform                           # terraform iac
@@ -35,6 +36,30 @@ Network Interface
 1. WAN - Linux Bridge ( vtnet0 )
 2. LAN - VM Network   ( vtnet1)
 3. OPT - Zerotier Network ( zte... )
+
+## Jumphost / Utils VM
+
+1. Update `ansible/hosts` with jumphost vm 
+
+```
+ubuntu-server ansible_host=x.x.x.x ansible_user=devops
+```
+
+2. Run the `install-server.yaml` playbook with tags for each service to enable
+
+#### Available Service
+- [Harbor](https://goharbor.io/) - Container registry
+- [Minio](https://min.io/)  - S3 Compatible storage
+- [Vault](https://www.hashicorp.com/products/vault)  - Secret management
+```
+ansible-playbook install-server.yaml --list-tags
+
+playbook: install-server.yaml
+
+  play #1 (ubuntu-server): Install Server       TAGS: []
+      TASK TAGS: [always, harbor, minio, vault]
+```
+
 
 
 ## Kubernetes Cluster
