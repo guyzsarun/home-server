@@ -26,6 +26,9 @@ resource "null_resource" "pfsense_base_image" {
       host     = var.proxmox_config.ip
     }
   }
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "null_resource" "packer_pfsense_template" {
