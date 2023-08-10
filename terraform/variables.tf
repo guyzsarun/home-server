@@ -1,4 +1,5 @@
 variable "proxmox_config" {
+  sensitive = true
   type = object({
     api_url  = string
     ip       = string
@@ -6,7 +7,6 @@ variable "proxmox_config" {
     ssh_user = string
     password = string
   })
-  sensitive = true
   default = {
     api_url  = "https://proxmox-server01.example.com:8006/api2/json"
     ip       = "192.168.1.1"
