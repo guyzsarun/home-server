@@ -17,6 +17,7 @@
         - net-tools
         - gpg
         - docker-compose
+        - prometheus-node-exporter
       state: present
       update_cache: yes
     tags:
