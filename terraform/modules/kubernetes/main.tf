@@ -6,6 +6,7 @@ terraform {
     }
   }
 }
+
 resource "kubernetes_namespace" "metallb" {
   metadata {
     name = "metallb-system"
@@ -16,7 +17,6 @@ resource "kubernetes_namespace" "metallb" {
     }
   }
 }
-
 
 
 resource "helm_release" "metallb" {
@@ -35,6 +35,26 @@ resource "helm_release" "metallb" {
     command = "echo 'Waiting CRDs' && sleep 60"
   }
   depends_on = [kubernetes_namespace.metallb]
+}
+
+resource "helm_release" "nfs-storage" {
+  name       = "nfs-provisioner"
+  repository = "https://kubernetes-sigs.github.io/nfs-subdir-external-provisioner/"
+  chart      = "nfs-subdir-external-provisioner"
+  version    = "4.0.18"
+
+  namespace = "kube-system"
+
+  set {
+    name  = "nfs.server"
+    value = var.nfs_k8s_storage.nfs_server
+  }
+
+  set {
+    name  = "nfs.path"
+    value = var.nfs_k8s_storage.nfs_path
+  }
+
 }
 
 resource "kubectl_manifest" "metallb-pool" {
