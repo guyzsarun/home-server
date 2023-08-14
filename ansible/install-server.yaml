@@ -92,8 +92,8 @@
         copy:
           src: ./config/vault/vault.service
           dest: /etc/systemd/system
-          owner: root
-          group: root
+          owner: devops
+          group: devops
 
       - name: Start vault
         systemd:
@@ -125,3 +125,27 @@
 
       - debug:
           msg: "export VAULT_ADDR=http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8200"
+
+  - name: Install, Config NFS
+    tags: nfs
+    block:
+      - apt:
+          name:
+          - nfs-kernel-server
+          state: present
+      - file:
+          path: /home/devops/nfs_share
+          state: directory
+          owner: nobody
+          group: nogroup
+          mode: '0775'
+      - name: enable rpcbind nfslock nfs
+        service:
+          name:  nfs-kernel-server
+          enabled: yes
+      - name: Copy exports file.
+        copy:
+          src: ./config/nfs_exports
+          dest: /etc/exports
+      - name: NFS apply change configrue
+        shell: systemctl reload nfs;exportfs -a
