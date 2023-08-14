@@ -42,6 +42,10 @@ data:
     - /etc/config/rules
     - /etc/config/alerts
     scrape_configs:
+    - job_name: ubuntu-server
+      static_configs:
+      - targets:
+        - 192.168.100.55:9100
     - job_name: prometheus
       static_configs:
       - targets:
@@ -481,7 +485,6 @@ kind: PersistentVolumeClaim
 metadata:
   name: prometheus-nfs-pvc
 spec:
-  storageClassName: nfs-client
   accessModes:
     - ReadWriteMany
   resources:
