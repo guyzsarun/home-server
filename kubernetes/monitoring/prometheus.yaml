@@ -473,5 +473,17 @@ spec:
           configMap:
             name: prometheus
         - name: storage-volume
-          emptyDir:
-            {}
+          persistentVolumeClaim:
+            claimName: prometheus-nfs-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: prometheus-nfs-pvc
+spec:
+  storageClassName: nfs-client
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 3Gi
