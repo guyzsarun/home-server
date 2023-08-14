@@ -55,6 +55,11 @@ resource "helm_release" "nfs-storage" {
     value = var.nfs_k8s_storage.nfs_path
   }
 
+  set {
+    name  = "storageClass.defaultClass"
+    value = "true"
+  }
+
 }
 
 resource "kubectl_manifest" "metallb-pool" {
