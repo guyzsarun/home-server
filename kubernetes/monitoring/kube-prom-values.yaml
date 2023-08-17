@@ -1,0 +1,33 @@
+grafana:
+  adminPassword: password
+  resources:
+    limits:
+      cpu: 100m
+      memory: 512Mi
+  persistence:
+    type: pvc
+    enabled: true
+    storageClassName: nfs-client
+    accessModes:
+      - ReadWriteOnce
+    size: 4Gi
+    finalizers:
+      - kubernetes.io/pvc-protection
+  initChownData:
+    enabled: false
+
+  grafana.ini:
+    server:
+      root_url: http://localhost:3000/grafana
+      serve_from_sub_path: true
+
+prometheus:
+  prometheusSpec:
+    storageSpec:
+      volumeClaimTemplate:
+        spec:
+          storageClassName: nfs-client
+          accessModes: ["ReadWriteOnce"]
+          resources:
+            requests:
+              storage: 4Gi
