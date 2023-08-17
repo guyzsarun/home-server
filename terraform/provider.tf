@@ -23,6 +23,8 @@ terraform {
     }
 
   }
+
+  backend "local" { }
 }
 
 provider "proxmox" {

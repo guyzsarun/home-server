@@ -19,4 +19,7 @@ talos = {
   "worker_ip"    =  []
 }
 
-
+nfs_k8s_storage = {
+  nfs_path = "/home/devops/nfs_share"
+  nfs_server = "127.0.0.1"
+}

@@ -1,0 +1,3 @@
+# /etc/exports: the access control list for filesystems which may be exported
+#   to NFS clients.  See exports(5).
+/home/devops/nfs_share            *(rw,sync,no_subtree_check)

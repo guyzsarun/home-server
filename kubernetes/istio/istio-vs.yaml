@@ -36,12 +36,12 @@ spec:
     - destination:
         port:
           number: 9090
-        host: prometheus.istio-system.svc.cluster.local
+        host: monitoring-kube-prometheus-prometheus.istio-system.svc.cluster.local
   - match:
     - uri:
         prefix: /grafana
     route:
     - destination:
         port:
-          number: 3000
-        host: grafana.istio-system.svc.cluster.local
+          number: 80
+        host: monitoring-grafana.istio-system.svc.cluster.local

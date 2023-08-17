@@ -1,4 +1,5 @@
 variable "proxmox_config" {
+  sensitive = true
   type = object({
     api_url  = string
     ip       = string
@@ -6,7 +7,6 @@ variable "proxmox_config" {
     ssh_user = string
     password = string
   })
-  sensitive = true
   default = {
     api_url  = "https://proxmox-server01.example.com:8006/api2/json"
     ip       = "192.168.1.1"
@@ -40,4 +40,15 @@ variable "talos" {
 variable "kubeconfig" {
   type    = string
   default = "_talos/kubeconfig"
+}
+
+variable "nfs_k8s_storage" {
+  type = object({
+    nfs_server  = string
+    nfs_path = string
+  })
+  default = {
+    "nfs_server"  = "127.0.0.1"
+    "nfs_path" = "/home/devops/nfs_share"
+  }
 }

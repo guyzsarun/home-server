@@ -36,3 +36,4 @@ override.tf.json
 terraform.rc
 
 **/_talos/*
+*.tfbackend

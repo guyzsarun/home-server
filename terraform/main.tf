@@ -15,6 +15,8 @@ module "talos-patch" {
 
 module "kubernetes" {
   source     = "./modules/kubernetes"
+
+  nfs_k8s_storage = var.nfs_k8s_storage
   depends_on = [module.talos-patch]
 }
 
@@ -31,5 +33,5 @@ module "vm" {
   pfsense        = var.pfsense
   proxmox_config = var.proxmox_config
 
-  depends_on = [module.vm-templates]
+  # depends_on = [module.vm-templates]
 }

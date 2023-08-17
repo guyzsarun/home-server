@@ -6,6 +6,9 @@ spec:
       k8s:
         resources:
           requests:
+            cpu: 50m
+            memory: 128m
+          limits:
             cpu: 100m
             memory: 512m
         hpaSpec:
