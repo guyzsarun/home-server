@@ -22,6 +22,7 @@ autoinstall:
       name: direct
     swap:
       size: 0
+  hostname: ubuntu-jumphost
   user-data:
     package_upgrade: false
     timezone: Europe/Berlin
