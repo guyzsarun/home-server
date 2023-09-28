@@ -1,0 +1,110 @@
+{
+  "clientId": "kiali-client",
+  "name": "",
+  "description": "",
+  "rootUrl": "",
+  "adminUrl": "",
+  "baseUrl": "http://k8s.proxmox.local/kiali",
+  "surrogateAuthRequired": false,
+  "enabled": true,
+  "alwaysDisplayInConsole": true,
+  "clientAuthenticatorType": "client-secret",
+  "secret": "F42AiYs6NR4M49s40YoOMGoxKPaYTvOp",
+  "redirectUris": [
+    "http://k8s.proxmox.local/kiali/*"
+  ],
+  "webOrigins": [
+    "http://k8s.proxmox.local"
+  ],
+  "notBefore": 0,
+  "bearerOnly": false,
+  "consentRequired": false,
+  "standardFlowEnabled": true,
+  "implicitFlowEnabled": true,
+  "directAccessGrantsEnabled": true,
+  "serviceAccountsEnabled": true,
+  "authorizationServicesEnabled": true,
+  "publicClient": false,
+  "frontchannelLogout": true,
+  "protocol": "openid-connect",
+  "attributes": {
+    "client.secret.creation.time": "1694636982",
+    "oauth2.device.authorization.grant.enabled": "true",
+    "use.jwks.url": "false",
+    "backchannel.logout.revoke.offline.tokens": "false",
+    "use.refresh.tokens": "true",
+    "oidc.ciba.grant.enabled": "true",
+    "backchannel.logout.session.required": "true",
+    "client_credentials.use_refresh_token": "false",
+    "acr.loa.map": "{}",
+    "require.pushed.authorization.requests": "false",
+    "tls.client.certificate.bound.access.tokens": "false",
+    "display.on.consent.screen": "false",
+    "token.response.type.bearer.lower-case": "false",
+    "login_theme": "",
+    "frontchannel.logout.url": "",
+    "backchannel.logout.url": ""
+  },
+  "authenticationFlowBindingOverrides": {},
+  "fullScopeAllowed": true,
+  "nodeReRegistrationTimeout": -1,
+  "protocolMappers": [
+    {
+      "name": "Client Host",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usersessionmodel-note-mapper",
+      "consentRequired": false,
+      "config": {
+        "user.session.note": "clientHost",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "clientHost",
+        "jsonType.label": "String"
+      }
+    },
+    {
+      "name": "Client IP Address",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usersessionmodel-note-mapper",
+      "consentRequired": false,
+      "config": {
+        "user.session.note": "clientAddress",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "clientAddress",
+        "jsonType.label": "String"
+      }
+    },
+    {
+      "name": "Client ID",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usersessionmodel-note-mapper",
+      "consentRequired": false,
+      "config": {
+        "user.session.note": "client_id",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "client_id",
+        "jsonType.label": "String"
+      }
+    }
+  ],
+  "defaultClientScopes": [
+    "web-origins",
+    "acr",
+    "profile",
+    "roles",
+    "email"
+  ],
+  "optionalClientScopes": [
+    "address",
+    "phone",
+    "offline_access",
+    "microprofile-jwt"
+  ],
+  "access": {
+    "view": true,
+    "configure": true,
+    "manage": true
+  }
+}
