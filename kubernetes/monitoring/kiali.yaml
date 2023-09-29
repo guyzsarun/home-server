@@ -34,10 +34,15 @@ metadata:
 data:
   config.yaml: |
     auth:
-      openid: {}
-      openshift:
-        client_id_prefix: kiali
-      strategy: anonymous
+      openid:
+        client_id: "kiali-client"
+        issuer_uri: "http://k8s.proxmox.local/keycloak/realms/oidc"
+        insecure_skip_verify_tls: false
+        disable_rbac: true
+        scopes: ["openid","email"]
+        username_claim: "email"
+      strategy: openid
+      # strategy: anonymous
     deployment:
       accessible_namespaces:
       - '**'
@@ -90,6 +95,8 @@ data:
       version_label: v1.67.0
       view_only_mode: false
     external_services:
+      prometheus:
+        url: "http://monitoring-kube-prometheus-prometheus:9090/"
       custom_dashboards:
         enabled: true
       istio:

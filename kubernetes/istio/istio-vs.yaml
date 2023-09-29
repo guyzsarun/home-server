@@ -20,6 +20,10 @@ spec:
   - match:
     - uri:
         prefix: /kiali
+    headers:
+      request:
+        set:
+          X-Forwarded-Port: "80"
     route:
     - destination:
         port:
@@ -45,3 +49,12 @@ spec:
         port:
           number: 80
         host: monitoring-grafana.istio-system.svc.cluster.local
+  - match:
+    - uri:
+        prefix: /keycloak
+    route:
+    - destination:
+        port:
+          number: 8080
+        host: keycloak.authentication.svc.cluster.local
+

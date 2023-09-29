@@ -18,30 +18,35 @@ grafana:
 
   grafana.ini:
     server:
-      root_url: http://localhost:3000/grafana
+      root_url: http://k8s.proxmox.local/grafana
       serve_from_sub_path: true
-
+    panels:
+      enable_alpha: true
+    auth.generic_oauth:
+        enabled : true
+        name : Keycloak-OIDC
+        client_id : grafana-client
+        client_secret : 5pphI67RZcQEEcQv73R3TwBw1Ym6GNGv
+        scopes : openid email profile offline_access roles
+        email_attribute_path : email
+        login_attribute_path : username
+        name_attribute_path : full_name
+        auth_url : http://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/auth
+        token_url : http://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/token
+        api_url :  http://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/userinfo
+        allow_assign_grafana_admin : true
+        role_attribute_path : true||'Admin'
 prometheus:
   prometheusSpec:
-    # additionalScrapeConfigs:
-    #   - job_name: 'provmox-ve' https://github.com/prometheus-pve/prometheus-pve-exporter
-    #     static_configs:
-    #       - targets:
-    #         - 10.243.100.10
-    #     metrics_path: /pve
-    #     params:
-    #       module: [default]
-    #     relabel_configs:
-    #       - source_labels: [__address__]
-    #         target_label: __param_target
-    #       - source_labels: [__param_target]
-    #         target_label: instance
-    #       - target_label: __address__
-    #         replacement: 192.168.100.55:9221
-    #   - job_name: 'ubuntu-jumphost'
-    #     static_configs:
-    #       - targets:
-    #         - 192.168.100.55:9100
+    additionalScrapeConfigs:
+      - job_name: 'proxmox-ve'
+        static_configs:
+          - targets:
+            - 10.243.100.10:9100
+      - job_name: 'ubuntu-jumphost'
+        static_configs:
+          - targets:
+            - 192.168.100.55:9100
     storageSpec:
       volumeClaimTemplate:
         spec:
