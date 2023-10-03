@@ -1,0 +1,16 @@
+apiVersion: v1
+data:
+  oidc.config: |
+    name: Keycloak
+    issuer: http://k8s.proxmox.local/keycloak/realms/oidc
+    clientID: argocd-client
+    clientSecret: $oidc.keycloak.clientSecret
+    requestedScopes: ["openid", "profile", "email", "groups"]
+  url: https://argo.proxmox.local
+kind: ConfigMap
+metadata:
+  labels:
+    app.kubernetes.io/name: argocd-cm
+    app.kubernetes.io/part-of: argocd
+  name: argocd-cm
+  namespace: argocd
