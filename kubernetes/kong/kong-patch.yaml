@@ -1,3 +1,4 @@
+# kubectl patch svc/kong-gateway-kong-manager --patch-file=kong-patch.yaml
 spec:
   ports:
   - name: kong-admin
