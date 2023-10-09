@@ -1,0 +1,10 @@
+spec:
+  ports:
+  - name: kong-admin
+    port: 8001
+    protocol: TCP
+    targetPort: 8001
+  - name: kong-manager
+    port: 8002
+    protocol: TCP
+    targetPort: 8002
