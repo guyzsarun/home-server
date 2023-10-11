@@ -1,0 +1,29 @@
+manager:
+  enabled: true
+  type: LoadBalancer
+  tls:
+    enabled: false
+
+admin:
+  enabled: true
+  type: ClusterIP
+  http:
+    enabled: true
+  tls:
+    enabled: false
+
+proxy:
+  tls:
+    enabled: false
+
+env:
+  prefix: /kong_prefix/
+  database: "postgres"
+  pg_host: "postgres-db.authentication.svc.cluster.local"
+  pg_port: 5432
+  pg_user: "postgres"
+  pg_password: "password"
+  pg_database: "kong"
+  pg_ssl: "off"
+  pg_ssl_verify: "off"
+

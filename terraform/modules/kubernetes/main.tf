@@ -62,7 +62,7 @@ resource "helm_release" "kube-prom-stack" {
   depends_on = [
     kubernetes_namespace.istio-system,
     helm_release.nfs-storage
-    ]
+  ]
 }
 
 resource "helm_release" "nfs-storage" {
@@ -119,7 +119,7 @@ data "http" "kubelet-approver" {
 }
 
 data "kubectl_file_documents" "metrics_server_doc" {
-  content = data.http.kubelet-approver.body
+  content = data.http.kubelet-approver.response_body
 }
 resource "kubectl_manifest" "kubelet-approver" {
   for_each  = data.kubectl_file_documents.metrics_server_doc.manifests

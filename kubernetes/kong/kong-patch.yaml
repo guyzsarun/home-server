@@ -1,0 +1,11 @@
+# kubectl patch svc/kong-gateway-kong-manager --patch-file=kong-patch.yaml
+spec:
+  ports:
+  - name: kong-admin
+    port: 8001
+    protocol: TCP
+    targetPort: 8001
+  - name: kong-manager
+    port: 80
+    protocol: TCP
+    targetPort: 8002

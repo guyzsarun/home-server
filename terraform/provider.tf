@@ -24,7 +24,7 @@ terraform {
 
   }
 
-  backend "local" { }
+  backend "local" {}
 }
 
 provider "proxmox" {
