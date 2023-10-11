@@ -20,6 +20,12 @@ module "kubernetes" {
   depends_on = [module.talos-patch]
 }
 
+module "kubernetes-addons" {
+  source     = "./modules/kubernetes-addons"
+
+  depends_on = [module.kubernetes]
+}
+
 module "vm-templates" {
   source = "./modules/vm-templates"
 

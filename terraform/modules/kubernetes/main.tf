@@ -48,35 +48,6 @@ resource "kubernetes_namespace" "istio-system" {
   }
 }
 
-resource "kubernetes_namespace" "kong-gateway" {
-  metadata {
-    name = "kong-gateway"
-    labels = {
-        "istio-injection" = "enabled"
-        "pod-security.kubernetes.io/enforce" = "privileged"
-        "pod-security.kubernetes.io/audit"   = "privileged"
-        "pod-security.kubernetes.io/warn"    = "privileged"
-    }
-  }
-}
-
-resource "helm_release" "kong-gateway" {
-  name       = "kong-gateway"
-  repository = "https://charts.konghq.com"
-  chart      = "kong"
-  version    = "2.29.0"
-
-  namespace = "kong-gateway"
-  values = [
-    "${file("../kubernetes/kong/kong-values.yaml")}"
-  ]
-
-  depends_on = [
-    kubernetes_namespace.kong-gateway
-    ]
-}
-
-
 resource "helm_release" "kube-prom-stack" {
   name       = "monitoring"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -148,7 +119,7 @@ data "http" "kubelet-approver" {
 }
 
 data "kubectl_file_documents" "metrics_server_doc" {
-  content = data.http.kubelet-approver.body
+  content = data.http.kubelet-approver.response_body
 }
 resource "kubectl_manifest" "kubelet-approver" {
   for_each  = data.kubectl_file_documents.metrics_server_doc.manifests
