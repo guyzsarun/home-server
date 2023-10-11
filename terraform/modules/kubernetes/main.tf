@@ -62,7 +62,7 @@ resource "helm_release" "kube-prom-stack" {
   depends_on = [
     kubernetes_namespace.istio-system,
     helm_release.nfs-storage
-    ]
+  ]
 }
 
 resource "helm_release" "nfs-storage" {

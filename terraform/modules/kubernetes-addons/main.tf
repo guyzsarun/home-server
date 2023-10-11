@@ -2,10 +2,10 @@ resource "kubernetes_namespace" "kong-gateway" {
   metadata {
     name = "kong-gateway"
     labels = {
-        "istio-injection" = "enabled"
-        "pod-security.kubernetes.io/enforce" = "privileged"
-        "pod-security.kubernetes.io/audit"   = "privileged"
-        "pod-security.kubernetes.io/warn"    = "privileged"
+      "istio-injection"                    = "enabled"
+      "pod-security.kubernetes.io/enforce" = "privileged"
+      "pod-security.kubernetes.io/audit"   = "privileged"
+      "pod-security.kubernetes.io/warn"    = "privileged"
     }
   }
 }
@@ -23,5 +23,5 @@ resource "helm_release" "kong-gateway" {
 
   depends_on = [
     kubernetes_namespace.kong-gateway
-    ]
+  ]
 }
