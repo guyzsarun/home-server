@@ -7,12 +7,13 @@ Project Structure
 ```
 .
 ├── ansible                             # ansible playbook
-├── kubernetes                          # kubernetes manifests
+├── kubernetes                          # kubernetes/ helm chart manifests
 ├── packer                              # packer vm templates
 └── terraform                           # terraform iac
     └── _talos                          # talos kubernetes cluster config
     └── modules                         
         └── kubernetes                  # kubernetes cluster essentials
+        └── kubernetes-addons           # kubernetes addons
         └── talos-k8s                   # talos kubernetes vm
         └── talos-patch                 # talos kubernetes vm patch
         └── vm                          # jumphost / router vm
@@ -90,5 +91,6 @@ terraform -chdir=./terraform apply -target module.kubernetes
 # install istio
 istioctl install -f ./kubernetes/istio/istio-config.yaml 
 
-kubectl apply -f ./kubernetes/monitoring
+kubectl apply -f ./kubernetes/monitoring/kiali.yaml 
+kubectl apply -f ./kubernetes/monitoring/jaeger.yaml 
 ```
