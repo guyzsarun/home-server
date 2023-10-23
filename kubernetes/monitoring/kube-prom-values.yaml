@@ -47,6 +47,9 @@ prometheus:
         static_configs:
           - targets:
             - 192.168.100.55:9100
+      - job_name: 'kong-gateway'
+        static_configs:
+          - targets: ['kong-gateway-kong-manager.kong-gateway.svc.cluster.local:8001']
       - job_name: 'istiod'
         kubernetes_sd_configs:
         - role: endpoints
