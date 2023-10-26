@@ -5,7 +5,3 @@ spec:
     port: 8001
     protocol: TCP
     targetPort: 8001
-  - name: kong-manager
-    port: 80
-    protocol: TCP
-    targetPort: 8002
