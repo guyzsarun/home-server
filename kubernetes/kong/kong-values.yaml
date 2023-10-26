@@ -3,6 +3,10 @@ manager:
   type: LoadBalancer
   tls:
     enabled: false
+  http:
+    enabled: true
+    servicePort: 80
+    containerPort: 8002
 
 admin:
   enabled: true
@@ -27,3 +31,20 @@ env:
   pg_ssl: "off"
   pg_ssl_verify: "off"
 
+
+extraObjects:
+- apiVersion: configuration.konghq.com/v1
+  kind: KongClusterPlugin
+  metadata:
+    name: prometheus
+    annotations:
+      kubernetes.io/ingress.class: kong
+    labels:
+      global: 'true'
+  config:
+    per_consumer: true
+    status_code_metrics: true
+    latency_metrics: true
+    bandwidth_metrics: true
+    upstream_health_metrics: true
+  plugin: prometheus
