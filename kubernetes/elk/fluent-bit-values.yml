@@ -1,0 +1,25 @@
+config:
+  filters: |
+    [FILTER]
+        Name kubernetes
+        Match kube.*
+        Merge_Log On
+        Keep_Log Off
+        K8S-Logging.Parser On
+        K8S-Logging.Exclude On
+        Buffer_Size  1Mb
+
+  outputs: |
+    [OUTPUT]
+        Name es
+        Match *
+        Host elastic-es-http.istio-system.svc.cluster.local
+        Cloud_auth elastic:17Y0gjxE3JIDcW05K730S9lo
+        Replace_Dots On
+        Port 9200
+        Logstash_Format On
+        Suppress_Type_Name On
+        Retry_Limit 2
+        tls.verify Off
+        Type  _doc
+        Logstash_Prefix logstash
