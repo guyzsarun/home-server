@@ -57,4 +57,11 @@ spec:
         port:
           number: 8080
         host: keycloak.authentication.svc.cluster.local
-
+  - match:
+    - uri:
+        prefix: /kibana
+    route:
+    - destination:
+        host: kibana-kb-http.istio-system.svc.cluster.local
+        port:
+          number: 5601
