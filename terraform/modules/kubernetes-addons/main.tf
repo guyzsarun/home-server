@@ -50,6 +50,18 @@ resource "kubectl_manifest" "elk-kibana" {
     override_namespace = kubernetes_namespace.istio-system.metadata[0].name
 }
 
+resource "helm_release" "fluent-bit" {
+  name       = "fluent-bit"
+  repository = "https://fluent.github.io/helm-charts"
+  chart      = "fluent-bit"
+  version    = "0.39.0"
+
+  namespace = "kube-system"
+  values = [
+    "${file("../kubernetes/elk/fluent-bit-values.yml")}"
+  ]
+}
+
 resource "helm_release" "kube-prom-stack" {
   name       = "monitoring"
   repository = "https://prometheus-community.github.io/helm-charts"
