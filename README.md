@@ -3,9 +3,25 @@
 [![main](https://github.com/guyzsarun/home-server/actions/workflows/main.yml/badge.svg)](https://github.com/guyzsarun/home-server/actions/workflows/main.yml)
 
 
+## Table of Contents
+
+- [Diagram](#home-server-diagram)
+- [Product Structure](#project-structure)
+- [Pfsense Router](#pfsense-router)
+- [Jumphost VM](#jumphost-vm)
+- [Kubernetes Cluster](#kubernetes-cluster)
+  - [Authentication](#authentication)
+  - [Service Mesh / API Gateway](#service-mesh-and-api-gateway)
+
+
+
+## Home server Diagram
+
 ![proxmox](./assets/proxmox.jpg)
 
-Project Structure
+
+
+## Project Structure
 ```
 .
 ├── ansible                             # ansible playbook
@@ -40,7 +56,7 @@ zerotier-cli status
 2. LAN - VM Network   ( vtnet1 )
 3. OPT - Zerotier Network ( zte... )
 
-## Jumphost / Utils VM
+## Jumphost VM
 
 1. Update `ansible/hosts` with jumphost vm 
 
@@ -89,13 +105,29 @@ terraform -chdir=./terraform apply -target module.talos-patch
 terraform -chdir=./terraform apply -target module.kubernetes
 ```
 
-5. (Optional) Apply base kubernetes cluster config / addons
+5. Apply base kubernetes cluster config / addons
 ```
 terraform -chdir=./terraform apply -target module.kubernetes-addons
+```
+### Authentication
 
-# install istio
+Install keycloak OIDC with Postgresql
+```
+kubectl apply -f ./kubernetes/keycloak/keycloak.yaml
+```
+Keycloak client for application available in `./kubernetes/keycloak/client`
+
+### Service Mesh and  API Gateway
+
+Install Istio with istoctl
+```
 istioctl install -f ./kubernetes/istio/istio-config.yaml 
-
+```
+Install Mesh components and Patch Kong UI
+```
 kubectl apply -f ./kubernetes/monitoring/kiali.yaml 
 kubectl apply -f ./kubernetes/monitoring/jaeger.yaml 
+
+
+kubectl patch svc/kong-gateway-kong-manager --patch-file=./kubernetes/kong/kong-patch.yaml
 ```
