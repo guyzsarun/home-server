@@ -12,7 +12,7 @@
 - [Kubernetes Cluster](#kubernetes-cluster)
   - [Authentication](#authentication)
   - [Service Mesh / API Gateway](#service-mesh-and-api-gateway)
-
+- [Terraform Diagram](#terraform-diagram)
 
 
 ## Home server Diagram
@@ -131,3 +131,9 @@ kubectl apply -f ./kubernetes/monitoring/jaeger.yaml
 
 kubectl patch svc/kong-gateway-kong-manager --patch-file=./kubernetes/kong/kong-patch.yaml
 ```
+
+## Terraform Diagram
+
+Generated using [rover](https://github.com/im2nguyen/rover)
+
+![](./assets/terraform.svg)
