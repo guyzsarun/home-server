@@ -119,7 +119,7 @@ Keycloak client for application available in `./kubernetes/keycloak/client`
 
 ### Service Mesh and  API Gateway
 
-Install Istio with istoctl
+Install Istio with [istoctl](https://istio.io/latest/docs/setup/install/istioctl/)
 ```
 istioctl install -f ./kubernetes/istio/istio-config.yaml 
 ```
