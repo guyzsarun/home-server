@@ -10,6 +10,9 @@ on:
       - master
   workflow_dispatch:
 
+env:
+  K8S_IGNORE_LINT: 'argocd.yaml\|istio\|kong\|elastic\|kibana\|values'
+
 jobs:
   kubernetes:
     runs-on: ubuntu-latest
@@ -19,7 +22,7 @@ jobs:
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "YAML_LIST<<$EOF" >> "$GITHUB_ENV"
-          ls -1Rd kubernetes/*/*.yaml  | grep -v 'argocd.yaml\|istio-config\|kong-patch' >> "$GITHUB_ENV"
+          ls -1Rd kubernetes/*/*.yaml  | grep -v ${K8S_IGNORE_LINT} >> "$GITHUB_ENV"
           echo "$EOF" >> "$GITHUB_ENV"
       - name: kubernetes lint
         uses: azure/k8s-lint@v1
