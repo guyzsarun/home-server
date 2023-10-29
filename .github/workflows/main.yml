@@ -31,9 +31,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: init
+      - name: Init
         run: terraform -chdir=./terraform init
 
-      - name: validate
+      - name: Validate
         run: terraform -chdir=./terraform validate
+
+      - name: Linting
+        run: terraform -chdir=./terraform fmt -recursive -check
 
