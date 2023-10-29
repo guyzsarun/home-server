@@ -41,13 +41,13 @@ resource "helm_release" "elastic-operator" {
 }
 
 data "kubectl_path_documents" "elk" {
-    pattern = "../kubernetes/elk/*.yaml"
+  pattern = "../kubernetes/elk/*.yaml"
 }
 
 resource "kubectl_manifest" "elk-kibana" {
-    for_each  = toset(data.kubectl_path_documents.elk.documents)
-    yaml_body = each.value
-    override_namespace = kubernetes_namespace.istio-system.metadata[0].name
+  for_each           = toset(data.kubectl_path_documents.elk.documents)
+  yaml_body          = each.value
+  override_namespace = kubernetes_namespace.istio-system.metadata[0].name
 }
 
 resource "helm_release" "fluent-bit" {
