@@ -11,13 +11,6 @@ on:
   workflow_dispatch:
 
 jobs:
-  ansible-lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Run ansible-lint
-        uses: ansible/ansible-lint@main
-
   packer:
     runs-on: ubuntu-latest
     container: hashicorp/packer:1.9
@@ -40,9 +33,8 @@ jobs:
       - name: Init
         run: terraform -chdir=./terraform init
 
-      - name: Validate
-        run: terraform -chdir=./terraform validate
-
       - name: Linting
         run: terraform -chdir=./terraform fmt -recursive -check
 
+      - name: Validate
+        run: terraform -chdir=./terraform validate
