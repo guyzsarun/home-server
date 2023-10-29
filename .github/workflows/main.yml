@@ -11,6 +11,21 @@ on:
   workflow_dispatch:
 
 jobs:
+  kubernetes:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Glob kubernetes yaml
+        run: |
+          EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
+          echo "YAML_LIST<<$EOF" >> "$GITHUB_ENV"
+          ls -1Rd kubernetes/*/*.yaml >> "$GITHUB_ENV"
+          echo "$EOF" >> "$GITHUB_ENV"
+      - name: kubernetes lint
+        uses: azure/k8s-lint@v1
+        with:
+           manifests: |
+              ${{ env.YAML_LIST }}
   packer:
     runs-on: ubuntu-latest
     container: hashicorp/packer:1.9
