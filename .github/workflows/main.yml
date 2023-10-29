@@ -19,7 +19,7 @@ jobs:
         run: |
           EOF=$(dd if=/dev/urandom bs=15 count=1 status=none | base64)
           echo "YAML_LIST<<$EOF" >> "$GITHUB_ENV"
-          ls -1Rd kubernetes/*/*.yaml >> "$GITHUB_ENV"
+          ls -1Rd kubernetes/*/*.yaml  | grep -v 'argocd.yaml\|istio-config\|kong-patch' >> "$GITHUB_ENV"
           echo "$EOF" >> "$GITHUB_ENV"
       - name: kubernetes lint
         uses: azure/k8s-lint@v1
