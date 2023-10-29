@@ -38,6 +38,7 @@ grafana:
         role_attribute_path : true||'Admin'
 prometheus:
   prometheusSpec:
+    retention: 5d
     additionalScrapeConfigs:
       - job_name: 'proxmox-ve'
         static_configs:
