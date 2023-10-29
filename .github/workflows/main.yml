@@ -12,6 +12,7 @@ on:
 
 env:
   K8S_IGNORE_LINT: 'argocd.yaml\|istio\|kong\|elastic\|kibana\|values'
+  TERRAFORM_COMMAND: 'terraform -chdir=./terraform'
 
 jobs:
   kubernetes:
@@ -49,10 +50,10 @@ jobs:
       - uses: actions/checkout@v3
 
       - name: Init
-        run: terraform -chdir=./terraform init
+        run: ${TERRAFORM_COMMAND} init
 
       - name: Linting
-        run: terraform -chdir=./terraform fmt -recursive -check
+        run: ${TERRAFORM_COMMAND} fmt -recursive -check
 
       - name: Validate
-        run: terraform -chdir=./terraform validate
+        run: ${TERRAFORM_COMMAND} validate
