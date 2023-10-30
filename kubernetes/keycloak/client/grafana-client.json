@@ -4,17 +4,17 @@
   "description": "",
   "rootUrl": "",
   "adminUrl": "",
-  "baseUrl": "http://k8s.proxmox.local/grafana",
+  "baseUrl": "https://k8s.proxmox.local/grafana",
   "surrogateAuthRequired": false,
   "enabled": true,
   "alwaysDisplayInConsole": false,
   "clientAuthenticatorType": "client-secret",
   "secret": "5pphI67RZcQEEcQv73R3TwBw1Ym6GNGv",
   "redirectUris": [
-    "http://k8s.proxmox.local/grafana/*"
+    "https://k8s.proxmox.local/grafana/*"
   ],
   "webOrigins": [
-    "http://k8s.proxmox.local/grafana"
+    "https://k8s.proxmox.local/grafana"
   ],
   "notBefore": 0,
   "bearerOnly": false,
@@ -38,7 +38,10 @@
     "require.pushed.authorization.requests": "false",
     "tls.client.certificate.bound.access.tokens": "false",
     "display.on.consent.screen": "false",
-    "token.response.type.bearer.lower-case": "false"
+    "token.response.type.bearer.lower-case": "false",
+    "login_theme": "",
+    "frontchannel.logout.url": "",
+    "backchannel.logout.url": ""
   },
   "authenticationFlowBindingOverrides": {},
   "fullScopeAllowed": true,
@@ -101,5 +104,6 @@
     "view": true,
     "configure": true,
     "manage": true
-  }
+  },
+  "authorizationServicesEnabled": false
 }

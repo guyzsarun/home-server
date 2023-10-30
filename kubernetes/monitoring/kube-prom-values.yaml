@@ -18,7 +18,7 @@ grafana:
 
   grafana.ini:
     server:
-      root_url: http://k8s.proxmox.local/grafana
+      root_url: https://k8s.proxmox.local/grafana
       serve_from_sub_path: true
     panels:
       enable_alpha: true
@@ -31,9 +31,10 @@ grafana:
         email_attribute_path : email
         login_attribute_path : username
         name_attribute_path : full_name
-        auth_url : http://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/auth
-        token_url : http://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/token
-        api_url :  http://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/userinfo
+        auth_url : https://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/auth
+        token_url : https://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/token
+        api_url :  https://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/userinfo
+        tls_skip_verify_insecure: true
         allow_assign_grafana_admin : true
         role_attribute_path : true||'Admin'
 prometheus:
