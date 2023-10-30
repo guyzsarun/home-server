@@ -23,7 +23,7 @@ spec:
     headers:
       request:
         set:
-          X-Forwarded-Port: "80"
+          X-Forwarded-Port: "443"
     route:
     - destination:
         port:
