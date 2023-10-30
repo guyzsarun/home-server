@@ -36,8 +36,8 @@ data:
     auth:
       openid:
         client_id: "kiali-client"
-        issuer_uri: "http://k8s.proxmox.local/keycloak/realms/oidc"
-        insecure_skip_verify_tls: false
+        issuer_uri: "https://k8s.proxmox.local/keycloak/realms/oidc"
+        insecure_skip_verify_tls: true
         disable_rbac: true
         scopes: ["openid","email"]
         username_claim: "email"
