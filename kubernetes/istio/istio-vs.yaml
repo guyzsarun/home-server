@@ -5,7 +5,7 @@ metadata:
   namespace: istio-system
 spec:
   hosts:
-  - "*"
+  - "k8s.proxmox.local"
   gateways:
   - istio-system/default-gateway
   http:
@@ -65,3 +65,20 @@ spec:
         host: kibana-kb-http.istio-system.svc.cluster.local
         port:
           number: 5601
+---
+apiVersion: networking.istio.io/v1alpha3
+kind: VirtualService
+metadata:
+  name: argo-vs
+  namespace: istio-system
+spec:
+  hosts:
+  - "argo.proxmox.local"
+  gateways:
+  - istio-system/default-gateway
+  http:
+  - route:
+    - destination:
+        port:
+          number: 80
+        host: argocd-server.argocd.svc.cluster.local
