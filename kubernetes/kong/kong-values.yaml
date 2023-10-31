@@ -18,7 +18,10 @@ admin:
 
 proxy:
   tls:
-    enabled: false
+    enabled: true
+
+secretVolumes:
+  - kong-proxy-tls
 
 env:
   prefix: /kong_prefix/
@@ -30,6 +33,8 @@ env:
   pg_database: "kong"
   pg_ssl: "off"
   pg_ssl_verify: "off"
+  ssl_cert: /etc/secrets/kong-proxy-tls/tls.crt
+  ssl_cert_key: /etc/secrets/kong-proxy-tls/tls.key
 
 
 extraObjects:
