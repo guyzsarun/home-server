@@ -9,15 +9,15 @@ spec:
       selfSignedCertificate:
         disabled: true
   # secureSettings:
-  # - secretName: keycloak-elk-secret
+  # - secretName: elastic-keycloak-secret
   nodeSets:
   - name: default
     count: 1
     config:
       node.store.allow_mmap: false
-      # xpack:
-      #   security:
-      #     enabled: true
+      xpack:
+        security:
+          enabled: true
       #     authc:
       #       token.enabled: true
       #       realms:
@@ -54,3 +54,11 @@ spec:
         resources:
           requests:
             storage: 5Gi
+# ---
+# apiVersion: v1
+# kind: Secret
+# metadata:
+#   name: elastic-keycloak-secret
+# type: Opaque
+# data:
+#   xpack.security.authc.realms.oidc.oidc.rp.client_secret: "iFP0tHUBaYwUC1dOWAX1xr5BpTpXshxy"

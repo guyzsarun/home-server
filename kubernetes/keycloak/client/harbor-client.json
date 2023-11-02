@@ -1,44 +1,39 @@
 {
-  "clientId": "grafana-client",
-  "name": "grafana-client",
+  "clientId": "harbor-client",
+  "name": "harbor-client",
   "description": "",
-  "rootUrl": "",
+  "rootUrl": "http://harbor.proxmox.local",
   "adminUrl": "",
-  "baseUrl": "https://k8s.proxmox.local/grafana",
+  "baseUrl": "",
   "surrogateAuthRequired": false,
   "enabled": true,
   "alwaysDisplayInConsole": false,
   "clientAuthenticatorType": "client-secret",
-  "secret": "5pphI67RZcQEEcQv73R3TwBw1Ym6GNGv",
+  "secret": "mRhvqhigsF38FUVSOpLIqt38g534jFaW",
   "redirectUris": [
-    "https://k8s.proxmox.local/grafana/*"
+    "http://harbor.proxmox.local:80/c/oidc/callback"
   ],
   "webOrigins": [
-    "https://k8s.proxmox.local/grafana"
+    "http://harbor.proxmox.local"
   ],
   "notBefore": 0,
   "bearerOnly": false,
   "consentRequired": false,
   "standardFlowEnabled": true,
-  "implicitFlowEnabled": true,
+  "implicitFlowEnabled": false,
   "directAccessGrantsEnabled": true,
   "serviceAccountsEnabled": true,
   "publicClient": false,
   "frontchannelLogout": true,
   "protocol": "openid-connect",
   "attributes": {
-    "client.secret.creation.time": "1695190360",
-    "oauth2.device.authorization.grant.enabled": "true",
-    "backchannel.logout.revoke.offline.tokens": "false",
-    "use.refresh.tokens": "true",
     "oidc.ciba.grant.enabled": "false",
+    "client.secret.creation.time": "1696010443",
     "backchannel.logout.session.required": "true",
-    "client_credentials.use_refresh_token": "false",
-    "acr.loa.map": "{}",
-    "require.pushed.authorization.requests": "false",
-    "tls.client.certificate.bound.access.tokens": "false",
+    "post.logout.redirect.uris": "",
     "display.on.consent.screen": "false",
-    "token.response.type.bearer.lower-case": "false",
+    "oauth2.device.authorization.grant.enabled": "false",
+    "backchannel.logout.revoke.offline.tokens": "false",
     "login_theme": "",
     "frontchannel.logout.url": "",
     "backchannel.logout.url": ""
@@ -48,15 +43,16 @@
   "nodeReRegistrationTimeout": -1,
   "protocolMappers": [
     {
-      "name": "Client IP Address",
+      "name": "Client Host",
       "protocol": "openid-connect",
       "protocolMapper": "oidc-usersessionmodel-note-mapper",
       "consentRequired": false,
       "config": {
-        "user.session.note": "clientAddress",
+        "user.session.note": "clientHost",
+        "userinfo.token.claim": "true",
         "id.token.claim": "true",
         "access.token.claim": "true",
-        "claim.name": "clientAddress",
+        "claim.name": "clientHost",
         "jsonType.label": "String"
       }
     },
@@ -67,6 +63,7 @@
       "consentRequired": false,
       "config": {
         "user.session.note": "client_id",
+        "userinfo.token.claim": "true",
         "id.token.claim": "true",
         "access.token.claim": "true",
         "claim.name": "client_id",
@@ -74,15 +71,16 @@
       }
     },
     {
-      "name": "Client Host",
+      "name": "Client IP Address",
       "protocol": "openid-connect",
       "protocolMapper": "oidc-usersessionmodel-note-mapper",
       "consentRequired": false,
       "config": {
-        "user.session.note": "clientHost",
+        "user.session.note": "clientAddress",
+        "userinfo.token.claim": "true",
         "id.token.claim": "true",
         "access.token.claim": "true",
-        "claim.name": "clientHost",
+        "claim.name": "clientAddress",
         "jsonType.label": "String"
       }
     }
@@ -92,6 +90,7 @@
     "acr",
     "profile",
     "roles",
+    "groups",
     "email"
   ],
   "optionalClientScopes": [

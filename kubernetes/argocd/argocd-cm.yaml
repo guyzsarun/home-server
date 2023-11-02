@@ -2,10 +2,11 @@ apiVersion: v1
 data:
   oidc.config: |
     name: Keycloak
-    issuer: http://k8s.proxmox.local/keycloak/realms/oidc
+    issuer: https://k8s.proxmox.local/keycloak/realms/oidc
     clientID: argocd-client
     clientSecret: $oidc.keycloak.clientSecret
     requestedScopes: ["openid", "profile", "email", "groups"]
+  oidc.tls.insecure.skip.verify: "true"
   url: https://argo.proxmox.local
 kind: ConfigMap
 metadata:

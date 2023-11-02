@@ -4,17 +4,17 @@
   "description": "",
   "rootUrl": "",
   "adminUrl": "",
-  "baseUrl": "http://k8s.proxmox.local/kiali",
+  "baseUrl": "https://k8s.proxmox.local/kiali",
   "surrogateAuthRequired": false,
   "enabled": true,
   "alwaysDisplayInConsole": true,
   "clientAuthenticatorType": "client-secret",
   "secret": "F42AiYs6NR4M49s40YoOMGoxKPaYTvOp",
   "redirectUris": [
-    "http://k8s.proxmox.local/kiali/*"
+    "https://k8s.proxmox.local/kiali"
   ],
   "webOrigins": [
-    "http://k8s.proxmox.local"
+    "https://k8s.proxmox.local"
   ],
   "notBefore": 0,
   "bearerOnly": false,
@@ -56,22 +56,10 @@
       "consentRequired": false,
       "config": {
         "user.session.note": "clientHost",
+        "userinfo.token.claim": "true",
         "id.token.claim": "true",
         "access.token.claim": "true",
         "claim.name": "clientHost",
-        "jsonType.label": "String"
-      }
-    },
-    {
-      "name": "Client IP Address",
-      "protocol": "openid-connect",
-      "protocolMapper": "oidc-usersessionmodel-note-mapper",
-      "consentRequired": false,
-      "config": {
-        "user.session.note": "clientAddress",
-        "id.token.claim": "true",
-        "access.token.claim": "true",
-        "claim.name": "clientAddress",
         "jsonType.label": "String"
       }
     },
@@ -82,9 +70,24 @@
       "consentRequired": false,
       "config": {
         "user.session.note": "client_id",
+        "userinfo.token.claim": "true",
         "id.token.claim": "true",
         "access.token.claim": "true",
         "claim.name": "client_id",
+        "jsonType.label": "String"
+      }
+    },
+    {
+      "name": "Client IP Address",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usersessionmodel-note-mapper",
+      "consentRequired": false,
+      "config": {
+        "user.session.note": "clientAddress",
+        "userinfo.token.claim": "true",
+        "id.token.claim": "true",
+        "access.token.claim": "true",
+        "claim.name": "clientAddress",
         "jsonType.label": "String"
       }
     }

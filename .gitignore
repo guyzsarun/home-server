@@ -37,3 +37,6 @@ terraform.rc
 
 **/_talos/*
 *.tfbackend
+
+# Ignore certificate
+certs
