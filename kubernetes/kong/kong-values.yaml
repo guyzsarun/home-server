@@ -17,6 +17,8 @@ admin:
     enabled: false
 
 proxy:
+  http:
+    enabled: false
   tls:
     enabled: true
 
