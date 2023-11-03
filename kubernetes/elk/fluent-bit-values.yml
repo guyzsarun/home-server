@@ -30,14 +30,15 @@ config:
         Match *
 
         Host elastic-es-http.istio-system.svc.cluster.local
+        Port 9200
         Cloud_auth elastic:17Y0gjxE3JIDcW05K730S9lo
 
-        Index fluent-bit-kube
-        Replace_Dots On
-        Port 9200
-        Logstash_Format off
-        Suppress_Type_Name On
         Time_Key  @timestamp
-        Retry_Limit 2
-        tls.verify Off
+        Index fluent-bit-kube
         Type  _doc
+
+        Suppress_Type_Name On
+        Replace_Dots On
+        tls.verify off
+        Logstash_Format off
+        Retry_Limit 2
