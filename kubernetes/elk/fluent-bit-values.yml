@@ -9,17 +9,25 @@ config:
         K8S-Logging.Exclude On
         Buffer_Size  1Mb
 
+    [FILTER]
+        Name           grep
+        Match          kube.*
+        Exclude        $kubernetes['namespace_name'] metallb-system
+
   outputs: |
     [OUTPUT]
         Name es
         Match *
+
         Host elastic-es-http.istio-system.svc.cluster.local
         Cloud_auth elastic:17Y0gjxE3JIDcW05K730S9lo
+
+        Index fluent-bit-kube
         Replace_Dots On
         Port 9200
-        Logstash_Format On
+        Logstash_Format off
         Suppress_Type_Name On
+        Time_Key  @timestamp
         Retry_Limit 2
         tls.verify Off
         Type  _doc
-        Logstash_Prefix logstash
