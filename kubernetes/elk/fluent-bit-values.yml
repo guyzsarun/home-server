@@ -1,3 +1,13 @@
+resources:
+  limits:
+    cpu: 10m
+    memory: 40Mi
+
+tolerations:
+- key: "node-role.kubernetes.io/control-plane"
+  operator: "Exists"
+  effect: "NoSchedule"
+
 config:
   filters: |
     [FILTER]
@@ -9,17 +19,26 @@ config:
         K8S-Logging.Exclude On
         Buffer_Size  1Mb
 
+    [FILTER]
+        Name           grep
+        Match          kube.*
+        Exclude        $kubernetes['namespace_name'] metallb-system
+
   outputs: |
     [OUTPUT]
         Name es
         Match *
+
         Host elastic-es-http.istio-system.svc.cluster.local
-        Cloud_auth elastic:17Y0gjxE3JIDcW05K730S9lo
-        Replace_Dots On
         Port 9200
-        Logstash_Format On
-        Suppress_Type_Name On
-        Retry_Limit 2
-        tls.verify Off
+        Cloud_auth elastic:17Y0gjxE3JIDcW05K730S9lo
+
+        Time_Key  @timestamp
+        Index fluent-bit-kube
         Type  _doc
-        Logstash_Prefix logstash
+
+        Suppress_Type_Name On
+        Replace_Dots On
+        tls.verify off
+        Logstash_Format off
+        Retry_Limit 2
