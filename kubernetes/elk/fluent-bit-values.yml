@@ -1,3 +1,13 @@
+resources:
+  limits:
+    cpu: 10m
+    memory: 40Mi
+
+tolerations:
+- key: "node-role.kubernetes.io/control-plane"
+  operator: "Exists"
+  effect: "NoSchedule"
+
 config:
   filters: |
     [FILTER]
