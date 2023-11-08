@@ -66,7 +66,7 @@ resource "helm_release" "kube-prom-stack" {
   name       = "monitoring"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
-  version    =  var.k8s_addons.kube-prom_version
+  version    = var.k8s_addons.kube-prom_version
 
   namespace = kubernetes_namespace.istio-system.metadata[0].name
   values = [
@@ -96,7 +96,7 @@ resource "helm_release" "istiod" {
     "${file("../kubernetes/istio/istiod-values.yaml")}"
   ]
 
-  depends_on = [ helm_release.istio-base ]
+  depends_on = [helm_release.istio-base]
 }
 
 resource "helm_release" "istio-gateway" {
@@ -107,7 +107,7 @@ resource "helm_release" "istio-gateway" {
 
   namespace = kubernetes_namespace.istio-system.metadata[0].name
 
-  depends_on = [ helm_release.istiod ]
+  depends_on = [helm_release.istiod]
 }
 
 
