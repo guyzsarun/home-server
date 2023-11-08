@@ -23,7 +23,7 @@ resource "helm_release" "kong-gateway" {
   name       = "kong-gateway"
   repository = "https://charts.konghq.com"
   chart      = "kong"
-  version    = "2.29.0"
+  version    = var.k8s_addons.kong_version
 
   namespace = kubernetes_namespace.kong-gateway.metadata[0].name
   values = [
@@ -35,7 +35,7 @@ resource "helm_release" "elastic-operator" {
   name       = "elastic-operator"
   repository = "https://helm.elastic.co"
   chart      = "eck-operator"
-  version    = "2.9.0"
+  version    = var.k8s_addons.elk_version
 
   namespace = kubernetes_namespace.istio-system.metadata[0].name
 }
@@ -54,7 +54,7 @@ resource "helm_release" "fluent-bit" {
   name       = "fluent-bit"
   repository = "https://fluent.github.io/helm-charts"
   chart      = "fluent-bit"
-  version    = "0.39.0"
+  version    = var.k8s_addons.fluentbit_version
 
   namespace = "kube-system"
   values = [
@@ -66,7 +66,7 @@ resource "helm_release" "kube-prom-stack" {
   name       = "monitoring"
   repository = "https://prometheus-community.github.io/helm-charts"
   chart      = "kube-prometheus-stack"
-  version    = "48.3.1"
+  version    =  var.k8s_addons.kube-prom_version
 
   namespace = kubernetes_namespace.istio-system.metadata[0].name
   values = [
@@ -74,6 +74,43 @@ resource "helm_release" "kube-prom-stack" {
   ]
 
 }
+
+resource "helm_release" "istio-base" {
+  name       = "istio-base"
+  repository = "https://istio-release.storage.googleapis.com/charts"
+  chart      = "base"
+  version    = var.k8s_addons.istio_version
+
+  namespace = kubernetes_namespace.istio-system.metadata[0].name
+}
+
+resource "helm_release" "istiod" {
+  name       = "istiod"
+  repository = "https://istio-release.storage.googleapis.com/charts"
+  chart      = "istiod"
+  version    = var.k8s_addons.istio_version
+
+  namespace = kubernetes_namespace.istio-system.metadata[0].name
+
+  values = [
+    "${file("../kubernetes/istio/istiod-values.yaml")}"
+  ]
+
+  depends_on = [ helm_release.istio-base ]
+}
+
+resource "helm_release" "istio-gateway" {
+  name       = "istio-gateway"
+  repository = "https://istio-release.storage.googleapis.com/charts"
+  chart      = "gateway"
+  version    = var.k8s_addons.istio_version
+
+  namespace = kubernetes_namespace.istio-system.metadata[0].name
+
+  depends_on = [ helm_release.istiod ]
+}
+
+
 
 resource "kubernetes_namespace" "istio-system" {
   metadata {
