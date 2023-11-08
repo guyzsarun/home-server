@@ -23,6 +23,7 @@ module "kubernetes" {
 module "kubernetes-addons" {
   source = "./modules/kubernetes-addons"
 
+  k8s_addons = var.k8s_addons
   depends_on = [module.kubernetes]
 }
 
