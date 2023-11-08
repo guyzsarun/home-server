@@ -9,8 +9,7 @@ spec:
             cpu: 50m
             memory: 128m
           limits:
-            cpu: 100m
-            memory: 512m
+            memory: 1G
         hpaSpec:
           maxReplicas: 2
           minReplicas: 1
