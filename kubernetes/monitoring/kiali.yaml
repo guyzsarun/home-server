@@ -101,6 +101,17 @@ data:
         enabled: true
       istio:
         root_namespace: istio-system
+        component_status:
+          components:
+          - app_label: "istio-gateway"
+            is_core: true
+            is_proxy: true
+            namespace: istio-system
+      tracing:
+        enabled: true
+        in_cluster_url: "http://tracing.istio-system:16685/jaeger"
+      grafana:
+        enabled: false
     identity:
       cert_file: ""
       private_key_file: ""

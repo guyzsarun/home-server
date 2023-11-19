@@ -1,7 +1,7 @@
 apiVersion: v1
 data:
   policy.csv: |
-    g, admin, role:admin
+    g, root, role:admin
   policy.default: role:readonly
 kind: ConfigMap
 metadata:
