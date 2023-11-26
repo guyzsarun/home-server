@@ -55,3 +55,20 @@ extraObjects:
     bandwidth_metrics: true
     upstream_health_metrics: true
   plugin: prometheus
+- apiVersion: configuration.konghq.com/v1
+  kind: KongClusterPlugin
+  metadata:
+    name: jaeger
+    annotations:
+      kubernetes.io/ingress.class: kong
+    labels:
+      global: 'true'
+  config:
+    http_endpoint: http://zipkin.istio-system.svc.cluster.local:9411/api/v2/spans
+    sample_ratio: 1
+    include_credential: true
+    default_header_type: 'jaeger'
+    header_type: 'jaeger'
+    http_span_name: 'method_path'
+    local_service_name: 'kong-gateway'
+  plugin: zipkin
