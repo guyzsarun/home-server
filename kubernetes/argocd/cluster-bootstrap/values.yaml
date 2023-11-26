@@ -1,0 +1,12 @@
+bootstrap:
+  namespace: argocd
+  project: cluster-addons
+
+addons:
+  kiali: true
+  jaeger: true
+
+spec:
+  destination:
+    server: https://192.168.100.46:6443
+    namespace: istio-system

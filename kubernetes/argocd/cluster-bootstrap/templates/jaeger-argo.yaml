@@ -1,10 +1,13 @@
+{{ if .Values.addons.jaeger }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: jaeger-argo
-  namespace: {{ .Values.addons.namespace }}
+  name: jaeger
+  namespace: {{ .Values.bootstrap.namespace }}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
-  project: cluster-addons
+  project: {{ .Values.bootstrap.project }}
   destination:
     namespace: {{ .Values.spec.destination.namespace }}
     server: {{ .Values.spec.destination.server }}
@@ -14,3 +17,4 @@ spec:
     path: kubernetes/monitoring
     repoURL: https://github.com/guyzsarun/home-server
     targetRevision: HEAD
+{{ end }}

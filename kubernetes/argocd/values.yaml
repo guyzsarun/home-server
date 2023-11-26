@@ -1,7 +1,0 @@
-addons:
-  namespace: argocd
-
-spec:
-  destination:
-    server: https://192.168.100.46:6443
-    namespace: cluster-essentials

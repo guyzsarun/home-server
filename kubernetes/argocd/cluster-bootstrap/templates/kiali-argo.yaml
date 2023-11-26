@@ -1,16 +1,20 @@
+{{ if .Values.addons.kiali }}
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: kiali-argo
-  namespace: {{ .Values.addons.namespace }}
+  name: kiali
+  namespace: {{ .Values.bootstrap.namespace }}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
 spec:
+  project: {{ .Values.bootstrap.project }}
   destination:
     namespace: {{ .Values.spec.destination.namespace }}
     server: {{ .Values.spec.destination.server }}
-  project: cluster-addons
   source:
     directory:
       include: kiali.yaml
     path: kubernetes/monitoring
     repoURL: https://github.com/guyzsarun/home-server
     targetRevision: HEAD
+{{ end }}
