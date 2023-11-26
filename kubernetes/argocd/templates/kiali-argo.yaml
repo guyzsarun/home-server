@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kiali-argo
+  namespace: {{ .Values.addons.namespace }}
+spec:
+  destination:
+    namespace: {{ .Values.spec.destination.namespace }}
+    server: {{ .Values.spec.destination.server }}
+  project: cluster-addons
+  source:
+    directory:
+      include: kiali.yaml
+    path: kubernetes/monitoring
+    repoURL: https://github.com/guyzsarun/home-server
+    targetRevision: HEAD

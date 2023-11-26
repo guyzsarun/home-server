@@ -1,0 +1,16 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: jaeger-argo
+  namespace: {{ .Values.addons.namespace }}
+spec:
+  project: cluster-addons
+  destination:
+    namespace: {{ .Values.spec.destination.namespace }}
+    server: {{ .Values.spec.destination.server }}
+  source:
+    directory:
+      include: jaeger.yaml
+    path: kubernetes/monitoring
+    repoURL: https://github.com/guyzsarun/home-server
+    targetRevision: HEAD
