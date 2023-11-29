@@ -5,6 +5,10 @@ bootstrap:
 addons:
   kiali: true
   jaeger: true
+  keycloak: true
+
+keycloak:
+  namespace: authentication
 
 spec:
   destination:
