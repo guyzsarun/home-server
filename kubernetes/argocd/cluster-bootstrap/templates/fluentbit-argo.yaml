@@ -1,0 +1,24 @@
+{{ if .Values.addons.fluent-bit }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: fluent-bit
+  namespace: {{ .Values.bootstrap.namespace }}
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: {{ .Values.bootstrap.project }}
+  destination:
+    namespace: {{ .Values.spec.fluent-bit.namespace }}
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: https://fluent.github.io/helm-charts
+    chart: fluent-bit
+    targetRevision: {{ .Values.spec.fluent-bit.version }}
+    helm:
+      valueFiles:
+      - $values/kubernetes/elk/fluent-bit-values.yml
+  - repoURL: https://github.com/guyzsarun/home-server
+    targetRevision: HEAD
+    ref: values
+{{ end }}

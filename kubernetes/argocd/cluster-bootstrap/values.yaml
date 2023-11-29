@@ -6,9 +6,14 @@ addons:
   kiali: true
   jaeger: true
   keycloak: true
+  fluent-bit: true
 
 keycloak:
   namespace: authentication
+
+fluent-bit:
+  namespace: kube-system
+  version: 0.39.0
 
 spec:
   destination:
