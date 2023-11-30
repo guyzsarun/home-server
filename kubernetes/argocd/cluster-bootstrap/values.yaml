@@ -7,9 +7,13 @@ addons:
   jaeger: true
   keycloak: true
   fluentbit: true
+  prometheus: true
 
 keycloak:
   namespace: authentication
+
+prometheus:
+  namespace: istio-system
 
 fluentbit:
   namespace: kube-system
