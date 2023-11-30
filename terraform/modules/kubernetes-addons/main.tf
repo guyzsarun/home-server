@@ -60,7 +60,6 @@ resource "helm_release" "kube-prom-stack" {
   values = [
     "${file("../kubernetes/monitoring/kube-prom-values.yaml")}"
   ]
-
 }
 
 resource "helm_release" "istio-base" {
