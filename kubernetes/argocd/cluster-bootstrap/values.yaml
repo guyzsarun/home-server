@@ -7,14 +7,10 @@ addons:
   jaeger: true
   keycloak: true
   fluentbit: true
-  prometheus: true
 
 keycloak:
   namespace: authentication
 
-prometheus:
-  namespace: istio-system
-  version: 48.3.1
 
 fluentbit:
   namespace: kube-system

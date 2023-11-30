@@ -19,6 +19,6 @@ spec:
       valueFiles:
       - $values/kubernetes/monitoring/fluent-bit-values.yaml
   - repoURL: https://github.com/guyzsarun/home-server
-    targetRevision: chore/argo-helm
+    targetRevision: HEAD
     ref: values
 {{ end }}
