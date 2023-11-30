@@ -1,0 +1,18 @@
+{{ if .Values.addons.keycloak }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: keycloak
+  namespace: {{ .Values.bootstrap.namespace }}
+spec:
+  project: {{ .Values.bootstrap.project }}
+  destination:
+    namespace: {{ .Values.keycloak.namespace }}
+    server: {{ .Values.spec.destination.server }}
+  source:
+    directory:
+      include: keycloak.yaml
+    path: kubernetes/keycloak
+    repoURL: https://github.com/guyzsarun/home-server
+    targetRevision: HEAD
+{{ end }}

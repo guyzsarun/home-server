@@ -1,0 +1,22 @@
+bootstrap:
+  namespace: argocd
+  project: cluster-addons
+
+addons:
+  kiali: true
+  jaeger: true
+  keycloak: true
+  fluentbit: true
+
+keycloak:
+  namespace: authentication
+
+
+fluentbit:
+  namespace: kube-system
+  version: 0.39.0
+
+spec:
+  destination:
+    server: https://192.168.100.46:6443
+    namespace: istio-system

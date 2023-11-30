@@ -1,0 +1,20 @@
+configs:
+  cm:
+    oidc.config: |
+      name: Keycloak
+      issuer: https://k8s.proxmox.local/keycloak/realms/oidc
+      clientID: argocd-client
+      clientSecret: $oidc.keycloak.clientSecret
+      requestedScopes: ["openid", "profile", "email", "groups"]
+    oidc.tls.insecure.skip.verify: "true"
+    url: "https://argo.proxmox.local"
+  rbac:
+    policy.csv: |
+      g, root, role:admin
+    policy.default: role:readonly
+  secret:
+    argocdServerAdminPassword: "$2a$10$sAvXI7Niz1cJy36HXGWhBeTibHayK/9R8s4e.U3P/MpxZxA/z7Rvi%"
+    extra:
+      oidc.keycloak.clientSecret: "mRhvqhigsF38FUVSOpLIqt38g534jFaW"
+  params:
+    server.insecure: true

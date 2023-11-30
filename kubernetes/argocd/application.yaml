@@ -1,0 +1,17 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-addons
+  namespace: argocd
+spec:
+  destination:
+    namespace: istio-system
+    server: https://192.168.100.46:6443
+  project: cluster-addons
+  source:
+    helm:
+      valueFiles:
+      - values.yaml
+    path: kubernetes/argocd/cluster-bootstrap
+    repoURL: https://github.com/guyzsarun/home-server
+    targetRevision: HEAD
