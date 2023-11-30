@@ -1,0 +1,22 @@
+{{ if .Values.addons.prometheus }}
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: monitoring
+  namespace: {{ .Values.bootstrap.namespace }}
+spec:
+  project: {{ .Values.bootstrap.project }}
+  destination:
+    namespace: {{ .Values.prometheus.namespace }}
+    server: {{ .Values.spec.destination.server }}
+  sources:
+  - repoURL: https://prometheus-community.github.io/helm-charts
+    chart: kube-prometheus-stack
+    targetRevision: {{ .Values.prometheus.version }}
+    helm:
+      valueFiles:
+      - $values/kubernetes/monitoring/kube-prom-values.yaml
+  - repoURL: https://github.com/guyzsarun/home-server
+    targetRevision: HEAD
+    ref: values
+{{ end }}
