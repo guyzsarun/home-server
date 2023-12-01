@@ -1,0 +1,80 @@
+---
+- name: Generate SSL
+  hosts: local
+
+  tasks:
+  - name: Create self-signed CA
+    tags: ca
+    block:
+    - name: Create private key
+      community.crypto.openssl_privatekey:
+        path: ./config/certs/proxmox.local.key
+      run_once: true
+
+    - name: Create certificate signing request (CSR) for new certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: ./config/certs/proxmox.local.key
+        subject_alt_name:
+          - "DNS:proxmox.local"
+        common_name: proxmox.local
+        organization_name: PROXMOX LOCAL
+      run_once: true
+      register: result
+
+    - name: Create self-signed CA certificate from CSR
+      community.crypto.x509_certificate:
+        path: ./config/certs/proxmox.local.crt
+        csr_content: "{{ result.csr }}"
+        privatekey_path: ./config/certs/proxmox.local.key
+        provider: selfsigned
+        ownca_not_after: +500w
+        ownca_not_before: "-1d"
+      run_once: true
+
+    - name: Get information on generated certificate
+      community.crypto.x509_certificate_info:
+        path: ./config/certs/proxmox.local.crt
+      register: result
+
+    - name: Dump information
+      ansible.builtin.debug:
+        var: result
+
+
+  - name: Create Application certificate
+    tags: app
+    block:
+    - name: Create private key
+      community.crypto.openssl_privatekey:
+        path: ./config/certs/k8s.proxmox.local.key
+      run_once: true
+
+    - name: Create certificate signing request (CSR) for new certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: ./config/certs/k8s.proxmox.local.key
+        subject_alt_name:
+          - "DNS:k8s.proxmox.local"
+          - "DNS:*.proxmox.local"
+      run_once: true
+      register: csr
+
+    - name: Sign certificate with our CA
+      community.crypto.x509_certificate:
+        csr_content: "{{ csr.csr }}"
+        path: ./config/certs/k8s.proxmox.local.crt
+        provider: ownca
+        ownca_path: ./config/certs/proxmox.local.crt
+        ownca_privatekey_path: ./config/certs/proxmox.local.key
+        ownca_not_after: +500w
+        ownca_not_before: "-1d"
+      run_once: true
+      register: certificate
+
+    - name: Get information on generated certificate
+      community.crypto.x509_certificate_info:
+        path: ./config/certs/k8s.proxmox.local.crt
+      register: result
+
+    - name: Dump information
+      ansible.builtin.debug:
+        var: result
