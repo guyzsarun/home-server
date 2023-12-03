@@ -23,6 +23,8 @@ config:
         Name           grep
         Match          kube.*
         Exclude        $kubernetes['namespace_name'] metallb-system
+        Exclude        $kubernetes['namespace_name'] argocd
+        Exclude        $kubernetes['namespace_name'] kube-system
         Exclude        log /^127.0.0.1.*/
         Exclude        log /.*\/metrics.*Prometheus/
 
