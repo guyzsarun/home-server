@@ -2,7 +2,7 @@
   "clientId": "harbor-client",
   "name": "harbor-client",
   "description": "",
-  "rootUrl": "http://harbor.proxmox.local",
+  "rootUrl": "https://harbor.proxmox.local",
   "adminUrl": "",
   "baseUrl": "",
   "surrogateAuthRequired": false,
@@ -11,10 +11,10 @@
   "clientAuthenticatorType": "client-secret",
   "secret": "mRhvqhigsF38FUVSOpLIqt38g534jFaW",
   "redirectUris": [
-    "http://harbor.proxmox.local:80/c/oidc/callback"
+    "https://harbor.proxmox.local:443/c/oidc/callback"
   ],
   "webOrigins": [
-    "http://harbor.proxmox.local"
+    "https://harbor.proxmox.local"
   ],
   "notBefore": 0,
   "bearerOnly": false,
@@ -30,13 +30,9 @@
     "oidc.ciba.grant.enabled": "false",
     "client.secret.creation.time": "1696010443",
     "backchannel.logout.session.required": "true",
-    "post.logout.redirect.uris": "",
     "display.on.consent.screen": "false",
     "oauth2.device.authorization.grant.enabled": "false",
-    "backchannel.logout.revoke.offline.tokens": "false",
-    "login_theme": "",
-    "frontchannel.logout.url": "",
-    "backchannel.logout.url": ""
+    "backchannel.logout.revoke.offline.tokens": "false"
   },
   "authenticationFlowBindingOverrides": {},
   "fullScopeAllowed": true,
@@ -103,6 +99,5 @@
     "view": true,
     "configure": true,
     "manage": true
-  },
-  "authorizationServicesEnabled": false
+  }
 }
