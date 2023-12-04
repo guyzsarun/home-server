@@ -22,10 +22,11 @@
       state: present
       update_cache: yes
     tags:
-    - always
+    - init
 
   - name: Copy certificate / key
     copy:
+      backup: true
       dest: /home/devops/certs/
       src: "{{ item }}"
     loop:
