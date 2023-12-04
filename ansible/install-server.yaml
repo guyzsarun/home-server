@@ -8,6 +8,7 @@
     VAULT_KEY_SHARE: 5
     VAULT_KEY_THRES: 3
     ZEROTIER_NETWORK_ID:
+    APP_BASE: ./config/certs/k8s.proxmox.local
 
   tasks:
   - name: Install essentials
@@ -22,6 +23,16 @@
       update_cache: yes
     tags:
     - always
+
+  - name: Copy certificate / key
+    copy:
+      dest: /home/devops/certs/
+      src: "{{ item }}"
+    loop:
+      - "{{ APP_BASE }}.crt"
+      - "{{ APP_BASE }}.key"
+    tags: ssl
+
 
   - name: Install, Config Zerotier
     tags: zerotier
@@ -55,6 +66,7 @@
       - copy:
           src: ./config/harbor/
           dest: /home/devops/harbor
+
   - name: Install, Config minio
     tags: minio
     block:

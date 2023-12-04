@@ -42,14 +42,14 @@
         ownca_not_before: "-1d"
       run_once: true
 
-    - name: Get information on generated certificate
-      community.crypto.x509_certificate_info:
-        path: ./config/certs/proxmox.local.crt
-      register: result
+    # - name: Get information on generated certificate
+    #   community.crypto.x509_certificate_info:
+    #     path: ./config/certs/proxmox.local.crt
+    #   register: result
 
-    - name: Dump information
-      ansible.builtin.debug:
-        var: result
+    # - name: Dump information
+    #   debug:
+    #     var: result
 
   - name: Check App certs
     stat:
@@ -73,11 +73,11 @@
           - "DNS:k8s.proxmox.local"
           - "DNS:*.proxmox.local"
       run_once: true
-      register: csr
+      register: result
 
     - name: Sign certificate with our CA
       community.crypto.x509_certificate:
-        csr_content: "{{ csr.csr }}"
+        csr_content: "{{ result.csr }}"
         path: "{{ APP_BASE }}.crt"
         provider: ownca
         ownca_path: "{{ CA_BASE }}.crt"
@@ -85,3 +85,14 @@
         ownca_not_after: +500w
         ownca_not_before: "-1d"
       run_once: true
+
+    # - name: Get information on generated certificate
+    #   community.crypto.x509_certificate_info:
+    #     path: "{{ APP_BASE }}.crt"
+    #   register: result
+
+    # - name: Dump information
+    #   debug:
+    #     var: result
+
+
