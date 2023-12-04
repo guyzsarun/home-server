@@ -3,13 +3,13 @@
   hosts: local
   vars:
     CA_BASE: ./config/certs/proxmox.local
-    APP_BASE: ./config/certs/gateway.proxmox.local
+    APP_BASE: ./config/certs/k8s.proxmox.local
 
 
   tasks:
   - name: Check CA exists
     stat:
-      path: "{{ CA_BASE }}.key"
+      path: "{{ CA_BASE }}.crt"
     register: c
     tags: ca
 
@@ -25,15 +25,18 @@
     - name: Create certificate signing request (CSR) for new certificate
       community.crypto.openssl_csr_pipe:
         privatekey_path: "{{ CA_BASE }}.key"
-        subject_alt_name:
-          - "DNS:proxmox.local"
+        select_crypto_backend: "cryptography"
+        basic_constraints:
+          - 'CA:TRUE'
         common_name: proxmox.local
         organization_name: PROXMOX LOCAL
+        use_common_name_for_san: false
       run_once: true
       register: result
 
     - name: Create self-signed CA certificate from CSR
       community.crypto.x509_certificate:
+        select_crypto_backend: "cryptography"
         path: "{{ CA_BASE }}.crt"
         csr_content: "{{ result.csr }}"
         privatekey_path: "{{ CA_BASE }}.key"
@@ -53,7 +56,7 @@
 
   - name: Check App certs
     stat:
-      path: "{{ APP_BASE }}.key"
+      path: "{{ APP_BASE }}.crt"
     register: c
     tags: app
 
@@ -69,6 +72,13 @@
     - name: Create certificate signing request (CSR) for new certificate
       community.crypto.openssl_csr_pipe:
         privatekey_path: "{{ APP_BASE }}.key"
+        key_usage:
+          - digitalSignature
+          - NonRepudiation
+          - keyEncipherment
+          - dataEncipherment
+        common_name: k8s.proxmox.local
+        organization_name: proxmox.local
         subject_alt_name:
           - "DNS:k8s.proxmox.local"
           - "DNS:*.proxmox.local"
@@ -86,13 +96,13 @@
         ownca_not_before: "-1d"
       run_once: true
 
-    # - name: Get information on generated certificate
-    #   community.crypto.x509_certificate_info:
-    #     path: "{{ APP_BASE }}.crt"
-    #   register: result
+    - name: Get information on generated certificate
+      community.crypto.x509_certificate_info:
+        path: "{{ APP_BASE }}.crt"
+      register: result
 
-    # - name: Dump information
-    #   debug:
-    #     var: result
+    - name: Dump information
+      debug:
+        var: result
 
 
