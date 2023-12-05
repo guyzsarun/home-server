@@ -1,0 +1,108 @@
+---
+- name: Generate SSL
+  hosts: local
+  vars:
+    CA_BASE: ./config/certs/proxmox.local
+    APP_BASE: ./config/certs/k8s.proxmox.local
+
+
+  tasks:
+  - name: Check CA exists
+    stat:
+      path: "{{ CA_BASE }}.crt"
+    register: c
+    tags: ca
+
+  - name: Create self-signed CA
+    when: not c.stat.exists
+    tags: ca
+    block:
+    - name: Create private key
+      community.crypto.openssl_privatekey:
+        path: "{{ CA_BASE }}.key"
+      run_once: true
+
+    - name: Create certificate signing request (CSR) for new certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: "{{ CA_BASE }}.key"
+        select_crypto_backend: "cryptography"
+        basic_constraints:
+          - 'CA:TRUE'
+        common_name: proxmox.local
+        organization_name: PROXMOX LOCAL
+        use_common_name_for_san: false
+      run_once: true
+      register: result
+
+    - name: Create self-signed CA certificate from CSR
+      community.crypto.x509_certificate:
+        select_crypto_backend: "cryptography"
+        path: "{{ CA_BASE }}.crt"
+        csr_content: "{{ result.csr }}"
+        privatekey_path: "{{ CA_BASE }}.key"
+        provider: selfsigned
+        ownca_not_after: +500w
+        ownca_not_before: "-1d"
+      run_once: true
+
+    # - name: Get information on generated certificate
+    #   community.crypto.x509_certificate_info:
+    #     path: ./config/certs/proxmox.local.crt
+    #   register: result
+
+    # - name: Dump information
+    #   debug:
+    #     var: result
+
+  - name: Check App certs
+    stat:
+      path: "{{ APP_BASE }}.crt"
+    register: c
+    tags: app
+
+  - name: Create Application certificate
+    when: not c.stat.exists
+    tags: app
+    block:
+    - name: Create private key
+      community.crypto.openssl_privatekey:
+        path: "{{ APP_BASE }}.key"
+      run_once: true
+
+    - name: Create certificate signing request (CSR) for new certificate
+      community.crypto.openssl_csr_pipe:
+        privatekey_path: "{{ APP_BASE }}.key"
+        key_usage:
+          - digitalSignature
+          - NonRepudiation
+          - keyEncipherment
+          - dataEncipherment
+        common_name: k8s.proxmox.local
+        organization_name: proxmox.local
+        subject_alt_name:
+          - "DNS:k8s.proxmox.local"
+          - "DNS:*.proxmox.local"
+      run_once: true
+      register: result
+
+    - name: Sign certificate with our CA
+      community.crypto.x509_certificate:
+        csr_content: "{{ result.csr }}"
+        path: "{{ APP_BASE }}.crt"
+        provider: ownca
+        ownca_path: "{{ CA_BASE }}.crt"
+        ownca_privatekey_path: "{{ CA_BASE }}.key"
+        ownca_not_after: +500w
+        ownca_not_before: "-1d"
+      run_once: true
+
+    - name: Get information on generated certificate
+      community.crypto.x509_certificate_info:
+        path: "{{ APP_BASE }}.crt"
+      register: result
+
+    - name: Dump information
+      debug:
+        var: result
+
+

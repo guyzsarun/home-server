@@ -10,12 +10,12 @@ http:
   port: 80
 
 # https related config
-#https:
+https:
 #  # https port for harbor, default is 443
-#  port: 443
+  port: 443
 #  # The path of cert and key files for nginx
-#  certificate: /your/certificate/path
-#  private_key: /your/private/key/path
+  certificate: /home/devops/certs/k8s.proxmox.local.crt
+  private_key: /home/devops/certs/k8s.proxmox.local.key
 
 # # Uncomment following will enable tls communication between all harbor components
 # internal_tls:
@@ -27,7 +27,7 @@ http:
 # Uncomment external_url if you want to enable external proxy
 # And when it enabled the hostname will no longer used
 # external_url: https://reg.mydomain.com:8433
-external_url: http://harbor.proxmox.local:80
+external_url: https://harbor.proxmox.local:443
 
 # The initial password of Harbor admin
 # It only works in first time to install harbor
