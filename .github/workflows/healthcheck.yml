@@ -27,10 +27,10 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        sleep 10 ;
+        sleep 15 ;
         for lines in ${{ env.HOSTS }};
         do
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
           echo ${line[0]}
-          ping -q -W 2 -c 5 ${line[1]}
+          ping  -W 3 -c 5 ${line[1]}
         done
