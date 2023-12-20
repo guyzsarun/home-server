@@ -24,9 +24,9 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        echo ${{ env.HOSTS }}
-        # for lines in ${{ env.HOSTS }} ; do
-        #   line=($(echo $lines | awk -F ':' '{print $1,$2}'))
-        #   echo ${line[1]}
-        #   echo ${line[2]}
-        # done
+        echo "${{ env.HOSTS }}"
+        for lines in "${{ env.HOSTS }}" ; do
+          line=($(echo $lines | awk -F ':' '{print $1,$2}'))
+          echo ${line[1]}
+          echo ${line[2]}
+        done
