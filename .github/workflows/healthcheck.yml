@@ -15,19 +15,19 @@ jobs:
   healthcheck:
     runs-on: ubuntu-latest
     steps:
-    - name: zerotier login
-      uses: zerotier/github-action@v1.0.1
-      with:
-        network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
-        auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
+    # - name: zerotier login
+    #   uses: zerotier/github-action@v1.0.1
+    #   with:
+    #     network_id: ${{ secrets.ZEROTIER_NETWORK_ID }}
+    #     auth_token: ${{ secrets.ZEROTIER_CENTRAL_TOKEN }}
 
     - name: ping host
       shell: bash
       run: |
-        # echo "${{ env.HOSTS }}"
+        #echo "${{ env.HOSTS }}"
         for lines in "${{ env.HOSTS }}" ; do
           echo ee $lines
-          line=($(echo $lines | awk -F ':' '{print $1,$2}'))
-          echo ${line[1]}
-          echo ${line[2]}
+          # line=($(echo $lines | awk -F ':' '{print $1,$2}'))
+          # echo ${line[1]}
+          # echo ${line[2]}
         done
