@@ -8,9 +8,8 @@ on:
 
 env:
   HOSTS: '
-    "test"
-    "test"
-    test3
+    HOST1: 10.10.10.10
+    HOST2: 10.10.10.12
     '
 
 jobs:
@@ -26,9 +25,7 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        for val in ${{ env.HOSTS }}; do
-          echo $val
-        done
+        echo ${{ env.HOSTS }} | while IFS=':' read i j ; do echo $i:$j ; done
         # count=10
         # while ! ping -c 1 ${{ env.HOSTS }} ; do
         #   echo "waiting..." ;
