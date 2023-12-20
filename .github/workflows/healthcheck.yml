@@ -24,7 +24,7 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        echo ${{ env.HOSTS }} | while IFS=':' read i j ; do echo $i,,,$j ; done
+        echo ${{ env.HOSTS }} | while IFS=':' read i j ; do echo $i ; done
         # count=10
         # while ! ping -c 1 ${{ env.HOSTS }} ; do
         #   echo "waiting..." ;
