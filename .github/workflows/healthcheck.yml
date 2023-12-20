@@ -26,13 +26,6 @@ jobs:
       run: |
         for lines in ${{ env.HOSTS }} ; do
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
-
-          ping -c 2 ${line[2]}
+          echo ${line[1]}
+          echo ${line[2]}
         done
-        # count=10
-        # while ! ping -c 1 ${{ env.HOSTS }} ; do
-        #   echo "waiting..." ;
-        #   sleep 1 ;
-        #   let count=count-1
-        # done
-        # echo "ping success"
