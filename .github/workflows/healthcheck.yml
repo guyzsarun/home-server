@@ -8,10 +8,8 @@ on:
 
 env:
   HOSTS: |
-      - key1: value1
-        key2: value2
-      - key1: value3
-        key2: value4
+      key2: value2
+      key2: value4
 jobs:
   healthcheck:
     runs-on: ubuntu-latest
@@ -25,7 +23,9 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        echo ${{ env.HOSTS }} | jq '.'  # Use jq for pretty printing JSON
+        for str in ${{ env.HOSTS }} ; do
+          echo $str
+        done
         # count=10
         # while ! ping -c 1 ${{ env.HOSTS }} ; do
         #   echo "waiting..." ;
