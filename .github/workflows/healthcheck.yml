@@ -24,8 +24,10 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        for str in ${{ env.HOSTS }} ; do
-          echo $str
+        for lines in ${{ env.HOSTS }} ; do
+          line=($(echo $lines | awk -F ':' '{print $1,$2}'))
+
+          echo ${line[1]}
         done
         # count=10
         # while ! ping -c 1 ${{ env.HOSTS }} ; do
