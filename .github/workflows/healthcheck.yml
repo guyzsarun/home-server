@@ -23,7 +23,7 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        for lines in "${{ HOSTS }}";
+        for lines in "${{ env.HOSTS }}";
         do
           echo ee $lines
           # line=($(echo $lines | awk -F ':' '{print $1,$2}'))
