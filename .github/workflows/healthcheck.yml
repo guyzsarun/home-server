@@ -28,7 +28,6 @@ jobs:
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
 
           ping -c 2 ${line[2]}
-          ping -c
         done
         # count=10
         # while ! ping -c 1 ${{ env.HOSTS }} ; do
