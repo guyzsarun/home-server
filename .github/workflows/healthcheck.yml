@@ -31,5 +31,5 @@ jobs:
         do
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
           echo ${line[0]}
-          ping  -W 4 -c 5 ${line[1]}
+          ping -i 2 -W 4 -c 6 ${line[1]}
         done
