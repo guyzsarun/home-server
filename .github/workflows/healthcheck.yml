@@ -9,7 +9,7 @@ on:
 env:
   HOSTS: '
     proxmox:10.243.100.10
-    jumphost2:10.243.100.255
+    router:10.243.100.1
     jumphost:10.243.100.143
     '
 
