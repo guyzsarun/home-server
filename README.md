@@ -1,6 +1,7 @@
 # home-server
 
-[![main](https://github.com/guyzsarun/home-server/actions/workflows/main.yml/badge.svg)](https://github.com/guyzsarun/home-server/actions/workflows/main.yml)
+[![main](https://github.com/guyzsarun/home-server/actions/workflows/main.yml/badge.svg)](https://github.com/guyzsarun/home-server/actions/workflows/main.yml) 
+[![healthcheck](https://github.com/guyzsarun/home-server/actions/workflows/healthcheck.yml/badge.svg)](https://github.com/guyzsarun/home-server/actions/workflows/healthcheck.yml)
 
 Proxmox Virtual Environment (Proxmox VE) for running VMs and Kubernetes Cluster provisioned using Terraform and Ansible.
 
