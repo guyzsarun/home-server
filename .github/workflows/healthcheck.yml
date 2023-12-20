@@ -9,8 +9,8 @@ on:
 env:
   HOSTS: '
     proxmox:10.243.100.10
-    jumphost:10.243.100.143
     jumphost2:10.243.100.255
+    jumphost:10.243.100.143
     '
 
 
@@ -29,7 +29,7 @@ jobs:
       run: |
         for lines in ${{ env.HOSTS }};
         do
-          echo ${line[0]}
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
+          echo ${line[0]}
           ping -c 2 ${line[1]}
         done
