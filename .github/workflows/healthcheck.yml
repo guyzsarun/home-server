@@ -7,10 +7,8 @@ on:
   - cron: "0 7 * * *"
 
 env:
-  HOSTS: '
-    proxmox:10.243.100.10
-    jumphost:10.243.100.143
-    '
+  HOSTS: proxmox:10.243.100.10 jumphost:10.243.100.143
+
 
 jobs:
   healthcheck:
@@ -25,8 +23,7 @@ jobs:
     - name: ping host
       shell: bash
       run: |
-        read -a array <<< ${{ env.HOSTS }}
-        for lines in "${array[@]}";
+        for lines in "${{ HOSTS }}";
         do
           echo ee $lines
           # line=($(echo $lines | awk -F ':' '{print $1,$2}'))
