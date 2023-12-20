@@ -30,6 +30,6 @@ jobs:
         do
           echo ee $lines;
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
+          echo ${line[0]}
           echo ${line[1]}
-          echo ${line[2]}
         done
