@@ -7,10 +7,11 @@ on:
   - cron: "0 7 * * *"
 
 env:
-  HOSTS: '[
-    "test",
+  HOSTS: '
     "test"
-    ]'
+    "test"
+    test3
+    '
 
 jobs:
   healthcheck:
