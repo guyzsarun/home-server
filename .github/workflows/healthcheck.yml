@@ -8,8 +8,8 @@ on:
 
 env:
   HOSTS: '
-          HOST1:10.10.10.10
-          HOST2:10.10.10.12
+          "HOST1:10.10.10.10"
+          "HOST2:10.10.10.12"
           '
 jobs:
   healthcheck:
