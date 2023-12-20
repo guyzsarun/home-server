@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
   schedule:
-  - cron: "0 7 * * *"
+  - cron: "0 */6 * * *"
 
 env:
   HOSTS: '
@@ -27,6 +27,7 @@ jobs:
     - name: ping host
       shell: bash
       run: |
+        sleep 5 ;
         for lines in ${{ env.HOSTS }};
         do
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
