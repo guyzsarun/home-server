@@ -8,8 +8,8 @@ on:
 
 env:
   HOSTS: '
-    key2:value2
-    key2:value4
+    proxmox:10.243.100.10
+    jumphost:10.243.100.143
     '
 jobs:
   healthcheck:
@@ -27,7 +27,8 @@ jobs:
         for lines in ${{ env.HOSTS }} ; do
           line=($(echo $lines | awk -F ':' '{print $1,$2}'))
 
-          echo ${line[1]}
+          ping -c 2 ${line[2]}
+          ping -c
         done
         # count=10
         # while ! ping -c 1 ${{ env.HOSTS }} ; do
