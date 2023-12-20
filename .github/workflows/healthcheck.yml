@@ -7,7 +7,9 @@ on:
   - cron: "0 7 * * *"
 
 env:
-  HOSTS: proxmox:10.243.100.10 jumphost:10.243.100.143
+  HOSTS: |
+    proxmox:10.243.100.10
+    jumphost:10.243.100.143
 
 
 jobs:
