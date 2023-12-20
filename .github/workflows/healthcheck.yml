@@ -8,8 +8,9 @@ on:
 
 env:
   HOSTS: |
-    "proxmox:10.243.100.10"
-    "jumphost:10.243.100.143"
+    proxmox:10.243.100.10
+    jumphost:10.243.100.143
+
 jobs:
   healthcheck:
     runs-on: ubuntu-latest
