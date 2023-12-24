@@ -73,7 +73,7 @@ resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
   iso = "local:iso/talos-kubernetes-${var.talos.version}.iso"
 
   # System
-  memory = 6000
+  memory = 8192
   cores  = 2
   cpu    = "host"
   scsihw = "virtio-scsi-single"
