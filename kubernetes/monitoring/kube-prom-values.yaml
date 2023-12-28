@@ -41,6 +41,12 @@ prometheus:
   prometheusSpec:
     retention: 5d
     additionalScrapeConfigs:
+      - job_name: minio-s3
+        metrics_path: /minio/v2/metrics/cluster
+        scheme: http
+        static_configs:
+        - targets:
+            - 192.168.100.55:9000
       - job_name: 'proxmox-ve'
         static_configs:
           - targets:
