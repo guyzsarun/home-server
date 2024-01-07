@@ -87,7 +87,7 @@ resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
 
   disk {
     type    = "scsi"
-    size    = "10G"
+    size    = "15G"
     storage = "local-lvm"
   }
   depends_on = [
