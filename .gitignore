@@ -40,3 +40,5 @@ terraform.rc
 
 # Ignore certificate
 certs
+
+backup
