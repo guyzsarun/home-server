@@ -20,9 +20,10 @@
   "bearerOnly": false,
   "consentRequired": false,
   "standardFlowEnabled": true,
-  "implicitFlowEnabled": true,
+  "implicitFlowEnabled": false,
   "directAccessGrantsEnabled": true,
   "serviceAccountsEnabled": true,
+  "authorizationServicesEnabled": true,
   "publicClient": false,
   "frontchannelLogout": true,
   "protocol": "openid-connect",
@@ -38,10 +39,7 @@
     "require.pushed.authorization.requests": "false",
     "tls.client.certificate.bound.access.tokens": "false",
     "display.on.consent.screen": "false",
-    "token.response.type.bearer.lower-case": "false",
-    "login_theme": "",
-    "frontchannel.logout.url": "",
-    "backchannel.logout.url": ""
+    "token.response.type.bearer.lower-case": "false"
   },
   "authenticationFlowBindingOverrides": {},
   "fullScopeAllowed": true,
@@ -85,6 +83,21 @@
         "claim.name": "clientHost",
         "jsonType.label": "String"
       }
+    },
+    {
+      "name": "realm roles",
+      "protocol": "openid-connect",
+      "protocolMapper": "oidc-usermodel-realm-role-mapper",
+      "consentRequired": false,
+      "config": {
+        "multivalued": "true",
+        "userinfo.token.claim": "true",
+        "user.attribute": "foo",
+        "id.token.claim": "false",
+        "access.token.claim": "true",
+        "claim.name": "realm_access.roles",
+        "jsonType.label": "String"
+      }
     }
   ],
   "defaultClientScopes": [
@@ -92,18 +105,17 @@
     "acr",
     "profile",
     "roles",
+    "offline_access",
     "email"
   ],
   "optionalClientScopes": [
     "address",
     "phone",
-    "offline_access",
     "microprofile-jwt"
   ],
   "access": {
     "view": true,
     "configure": true,
     "manage": true
-  },
-  "authorizationServicesEnabled": false
+  }
 }

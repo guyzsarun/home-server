@@ -36,7 +36,7 @@ grafana:
         api_url :  https://k8s.proxmox.local/keycloak/realms/oidc/protocol/openid-connect/userinfo
         tls_skip_verify_insecure: true
         allow_assign_grafana_admin : true
-        role_attribute_path : true||'Admin'
+        role_attribute_path : contains(realm_access.roles[*], 'grafanaadmin') && 'GrafanaAdmin' || contains(realm_access.roles[*], 'admin') && 'Admin' || contains(realm_access.roles[*], 'editor') && 'Editor' || 'Viewer'
 prometheus:
   prometheusSpec:
     retention: 5d
