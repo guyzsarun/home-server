@@ -14,4 +14,4 @@ spec:
       - values.yaml
     path: kubernetes/argocd/cluster-bootstrap
     repoURL: https://github.com/guyzsarun/home-server
-    targetRevision: chore/improve-bootstrap
+    targetRevision: HEAD
