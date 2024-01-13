@@ -18,5 +18,5 @@ fluentbit:
 
 spec:
   destination:
-    server: https://192.168.100.46:6443
+    server: https://kubernetes.default.svc
     namespace: istio-system
