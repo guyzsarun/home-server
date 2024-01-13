@@ -1,12 +1,12 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: cluster-addons
+  name: bootstrap
   namespace: argocd
 spec:
   destination:
     namespace: istio-system
-    server: https://192.168.100.46:6443
+    server: https://kubernetes.default.svc
   project: cluster-addons
   source:
     helm:
@@ -14,4 +14,4 @@ spec:
       - values.yaml
     path: kubernetes/argocd/cluster-bootstrap
     repoURL: https://github.com/guyzsarun/home-server
-    targetRevision: HEAD
+    targetRevision: chore/improve-bootstrap
