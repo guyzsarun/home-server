@@ -3,7 +3,7 @@
   hosts: local
   become: true
   vars:
-    HOST_FILE: ./config/hosts
+    HOST_FILE: ./config/localdns
 
 
   tasks:
