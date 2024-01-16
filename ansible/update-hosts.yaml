@@ -1,0 +1,16 @@
+---
+- name: Update /etc/hosts
+  hosts: local
+  become: true
+  vars:
+    HOST_FILE: ./config/hosts
+
+
+  tasks:
+  - name: Update hosts
+    lineinfile:
+      path: /etc/hosts
+      backup: true
+      regexp: ".*{{item}}$"
+      line: "{{item}}"
+    with_lines: "cat {{ HOST_FILE }}"
