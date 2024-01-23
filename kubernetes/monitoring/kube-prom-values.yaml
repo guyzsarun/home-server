@@ -43,10 +43,12 @@ prometheus:
     additionalScrapeConfigs:
       - job_name: minio-s3
         metrics_path: /minio/v2/metrics/cluster
-        scheme: http
+        scheme: https
         static_configs:
         - targets:
             - 192.168.100.55:9000
+        tls_config:
+          insecure_skip_verify: true
       - job_name: 'proxmox-ve'
         static_configs:
           - targets:
