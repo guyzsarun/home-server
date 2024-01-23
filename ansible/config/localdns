@@ -1,6 +1,5 @@
 10.243.100.143 server.proxmox.local
 10.243.100.143 harbor.proxmox.local
-10.243.100.143 minio.proxmox.local
 192.168.101.1 k8s.proxmox.local
 192.168.101.1 argo.proxmox.local
 192.168.101.3 kong.proxmox.local

@@ -7,10 +7,14 @@ services:
       - "9000:9000"
       - "9090:9090"
     restart: always
+    hostname: server.proxmox.local
     volumes:
       - ./data:/data
+      - /home/devops/certs/k8s.proxmox.local.crt:/root/.minio/certs/public.crt:ro
+      - /home/devops/certs/k8s.proxmox.local.key:/root/.minio/certs/private.key:ro
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: P@ssw0rd
       MINIO_PROMETHEUS_AUTH_TYPE: public
+      MINIO_SERVER_URL: https://server.proxmox.local:9000
     command: server --console-address ":9090" /data
