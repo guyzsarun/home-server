@@ -57,3 +57,22 @@ jobs:
 
       - name: Validate
         run: ${TERRAFORM_COMMAND} validate
+
+  tflint:
+    runs-on: ubuntu-latest
+    needs: terraform
+
+    steps:
+    - uses: actions/checkout@v3
+      name: Checkout source code
+
+    - uses: terraform-linters/setup-tflint@v3
+      name: Setup TFLint
+      with:
+        tflint_version: v0.44.1
+
+    - name: Init TFLint
+      run: tflint --init
+
+    - name: Run TFLint
+      run: tflint --chdir=./terraform -f compact
