@@ -78,9 +78,9 @@
       - copy:
           src: ./config/minio/minio.yaml
           dest: /home/devops/minio
-      - shell: |
-          cd /home/devops/minio
-          docker-compose -f minio.yaml up -d
+      - shell:
+            chdir: /home/devops/minio/
+            cmd: docker-compose -f minio.yaml up -d
 
   - name: Install, Config vault
     tags: vault
