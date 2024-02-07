@@ -2,7 +2,7 @@ version: '3'
 
 services:
   minio:
-    image: quay.io/minio/minio:RELEASE.2023-07-21T21-12-44Z
+    image: quay.io/minio/minio:RELEASE.2024-02-04T22-36-13Z-cpuv1
     ports:
       - "9000:9000"
       - "9090:9090"
@@ -10,6 +10,7 @@ services:
     hostname: server.proxmox.local
     volumes:
       - ./data:/data
+      - /home/devops/certs/proxmox.local.crt:/root/.minio/certs/CAs/myCA.crt:ro
       - /home/devops/certs/k8s.proxmox.local.crt:/root/.minio/certs/public.crt:ro
       - /home/devops/certs/k8s.proxmox.local.key:/root/.minio/certs/private.key:ro
     environment:
@@ -17,4 +18,10 @@ services:
       MINIO_ROOT_PASSWORD: P@ssw0rd
       MINIO_PROMETHEUS_AUTH_TYPE: public
       MINIO_SERVER_URL: https://server.proxmox.local:9000
-    command: server --console-address ":9090" /data
+      MINIO_BROWSER_REDIRECT_URL: https://server.proxmox.local:9090
+      MINIO_IDENTITY_OPENID_CONFIG_URL: "https://k8s.proxmox.local/keycloak/realms/oidc/.well-known/openid-configuration"
+      MINIO_IDENTITY_OPENID_CLIENT_ID: "minio-client"
+      MINIO_IDENTITY_OPENID_CLIENT_SECRET: "mRhvqhigsF38FUVSOpLIqt38g534jFaW"
+      MINIO_IDENTITY_OPENID_SCOPES: "openid,profile,email"
+      MINIO_IDENTITY_OPENID_DISPLAY_NAME: "Keycloak OIDC Login"
+    command: server --certs-dir "/root/.minio/certs" --console-address ":9090" /data
