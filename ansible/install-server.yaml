@@ -24,7 +24,7 @@
     tags:
     - init
 
-  - name: Copy certificate / key
+  - name: Copy CA / Certificate-Key
     copy:
       backup: true
       dest: /home/devops/certs/
@@ -32,6 +32,7 @@
     loop:
       - "{{ APP_BASE }}.crt"
       - "{{ APP_BASE }}.key"
+      - "./config/certs/proxmox.local.crt"
     tags: ssl
 
 
