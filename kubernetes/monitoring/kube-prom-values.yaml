@@ -1,5 +1,6 @@
 grafana:
   adminPassword: password
+  assertNoLeakedSecrets: false
   resources:
     limits:
       cpu: 100m
@@ -22,6 +23,8 @@ grafana:
       serve_from_sub_path: true
     panels:
       enable_alpha: true
+    security:
+      allow_embedding: true
     auth.generic_oauth:
         enabled : true
         name : Keycloak-OIDC
