@@ -35,7 +35,7 @@ config:
         Exclude        $kubernetes['namespace_name'] kube-system
         Exclude        log /^(127.0.0.1|::1).*/
         Exclude        remote /^(127.0.0.1|::1).*/
-        Exclude        log /.*\/metrics.*Prometheus/
+        Exclude        path /^\/metrics.*/
 
 
   outputs: |
