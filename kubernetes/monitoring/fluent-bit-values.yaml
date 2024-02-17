@@ -23,7 +23,7 @@ config:
         Name           parser
         Match          kube.*
         Parser         nginx
-        Preserve_Key   On
+        Preserve_Key   Off
         Key_Name       log
 
     [FILTER]
