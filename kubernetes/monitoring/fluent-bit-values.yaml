@@ -20,13 +20,22 @@ config:
         Buffer_Size  1Mb
 
     [FILTER]
+        Name           parser
+        Match          kube.*
+        Parser         nginx
+        Preserve_Key   Off
+        Reserve_Data   On
+        Key_Name       log
+
+    [FILTER]
         Name           grep
         Match          kube.*
         Exclude        $kubernetes['namespace_name'] metallb-system
         Exclude        $kubernetes['namespace_name'] argocd
         Exclude        $kubernetes['namespace_name'] kube-system
-        Exclude        log /^127.0.0.1.*/
-        Exclude        log /.*\/metrics.*Prometheus/
+        Exclude        log /^(127.0.0.1|::1).*/
+        Exclude        remote /^(127.0.0.1|::1).*/
+        Exclude        path /^\/metrics.*/
 
 
   outputs: |
@@ -47,3 +56,4 @@ config:
         tls.verify off
         Logstash_Format off
         Retry_Limit 2
+
