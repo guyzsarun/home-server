@@ -24,6 +24,7 @@ config:
         Match          kube.*
         Parser         nginx
         Preserve_Key   Off
+        Reserve_Data   On
         Key_Name       log
 
     [FILTER]
