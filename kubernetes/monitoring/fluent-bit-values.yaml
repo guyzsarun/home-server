@@ -22,9 +22,6 @@ config:
     [FILTER]
         Name           parser
         Match          kube.*
-        Include        $kubernetes['namespace_name'] kong-gateway
-        Exclude        log /^127.0.0.1.*/
-        Exclude        log /^::1*/
         Parser         nginx
 
     [FILTER]
