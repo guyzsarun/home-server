@@ -23,6 +23,7 @@ config:
         Name           parser
         Match          kube.*
         Parser         nginx
+        Key_Name       log
 
     [FILTER]
         Name           grep
