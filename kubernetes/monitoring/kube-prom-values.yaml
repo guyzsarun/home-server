@@ -43,6 +43,7 @@ grafana:
 prometheus:
   prometheusSpec:
     retention: 5d
+    scrapeInterval: "120s"
     additionalScrapeConfigs:
       - job_name: minio-s3
         metrics_path: /minio/v2/metrics/cluster
