@@ -42,7 +42,7 @@ grafana:
         role_attribute_path : contains(realm_access.roles[*], 'grafanaadmin') && 'GrafanaAdmin' || contains(realm_access.roles[*], 'admin') && 'Admin' || contains(realm_access.roles[*], 'editor') && 'Editor' || 'Viewer'
 prometheus:
   prometheusSpec:
-    retention: 5d
+    retention: 7d
     scrapeInterval: "120s"
     additionalScrapeConfigs:
       - job_name: minio-s3
