@@ -1,0 +1,46 @@
+---
+- name: Install pfsense
+  hosts: pfsense
+  vars:
+    ZEROTIER_NETWORK_ID:
+
+  tasks:
+    - name: Enable FreeBSD package
+      replace:
+        path: "{{ item }}"
+        regexp: '^FreeBSD: { enabled:.*'
+        replace: 'FreeBSD: { enabled: yes }'
+      loop:
+        - /usr/local/etc/pkg/repos/pfSense.conf
+        - /usr/local/etc/pkg/repos/FreeBSD.conf
+    - name: Update Package list
+      environment:
+        ASSUME_ALWAYS_YES: "yes"
+      shell: |
+         pkg update -f
+    - name: Install zerotier
+      package:
+        name: zerotier
+        state: present
+    - name: Update zerotier local config
+      copy:
+        dest: /var/db/zerotier-one/local.conf
+        content: |
+          {
+            "settings": {
+              "allowManagementFrom": [
+                "127.0.0.1",
+                "::1",
+                "10.0.0.0/8",
+                "ffff:127.0.0.1"
+              ]
+            }
+          }
+    - name: Start zerotier
+      service:
+        name: zerotier
+        enabled: true
+        state: started
+    - name: Join Network
+      shell: |
+        zerotier-cli join {{ ZEROTIER_NETWORK_ID }}
