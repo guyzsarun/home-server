@@ -22,6 +22,20 @@
       package:
         name: zerotier
         state: present
+
+    - name: Enable zerotier
+      copy:
+        dest: /usr/local/etc/rc.d/start_zerotier.sh
+        mode: 111
+        content: |
+          service zerotier restart
+
+    - name: Start zerotier
+      service:
+        name: zerotier
+        enabled: true
+        state: started
+
     - name: Update zerotier local config
       copy:
         dest: /var/db/zerotier-one/local.conf
@@ -36,11 +50,13 @@
               ]
             }
           }
-    - name: Start zerotier
+
+    - name: Reload config zerotier
       service:
         name: zerotier
         enabled: true
-        state: started
+        state: restarted
+
     - name: Join Network
       shell: |
         zerotier-cli join {{ ZEROTIER_NETWORK_ID }}
