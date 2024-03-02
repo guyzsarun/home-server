@@ -2,46 +2,55 @@ terraform {
   required_providers {
     proxmox = {
       source  = "Telmate/proxmox"
-      version = "2.9.14"
+      version = "3.0.1-rc1"
     }
   }
 }
 
-resource "proxmox_vm_qemu" "pfsense_vm" {
+resource "proxmox_vm_qemu" "opnsense_vm" {
   # Clone and metadata config
-  name        = "pfsense-router"
+  name        = "opnsense-router"
   target_node = "pve"
-  clone       = "pfsense-${var.pfsense.version}-template"
-  full_clone  = false
+  iso         = "local:iso/OPNsense-24.1-dvd-amd64.iso"
+  onboot      = true
 
-
-  boot     = "dcn"
-  bootdisk = "scsi0"
-  onboot   = "true"
-  tags     = "firewall"
+  tags = "firewall"
 
   # System
-  memory = 1024
+  memory = 2048
   cores  = 1
+  cpu    = "host"
 
-  # WAN
-  network {
-    model  = "virtio"
-    bridge = "vmbr0"
-  }
-  # LAN
-  network {
-    model  = "virtio"
-    bridge = "vmbr1"
+  disks {
+    scsi {
+      scsi0 {
+        disk {
+          size    = 15
+          storage = "local-lvm"
+        }
+      }
+    }
   }
 
-  define_connection_info = false
+  # LAN 1
+  network {
+    model    = "virtio"
+    bridge   = "vmbr0"
+    firewall = false
+  }
+
+  # LAN 2
+  network {
+    model    = "virtio"
+    bridge   = "vmbr1"
+    firewall = false
+  }
 
   lifecycle {
     ignore_changes = [
-      full_clone,
-      define_connection_info,
+      agent,
       disk,
+      qemu_os
     ]
   }
 }
@@ -54,12 +63,23 @@ resource "proxmox_vm_qemu" "ubuntu-server_vm" {
   os_type     = "ubuntu"
   clone       = "ubuntu-server-docker"
   full_clone  = true
+  desc        = "Ubuntu Server Bastion VM"
 
-  bootdisk = "scsi0"
-  onboot   = "true"
-  tags     = "jumphost"
+  onboot = "true"
+  tags   = "jumphost"
 
   agent = 1
+
+  disks {
+    scsi {
+      scsi0 {
+        disk {
+          size    = 15
+          storage = "local-lvm"
+        }
+      }
+    }
+  }
 
   # System
   memory = 2048
@@ -71,13 +91,99 @@ resource "proxmox_vm_qemu" "ubuntu-server_vm" {
     bridge = "vmbr1"
   }
 
-
   lifecycle {
     ignore_changes = [
-      full_clone,
       disk,
+      qemu_os
     ]
   }
 
   ipconfig0 = "ip=dhcp"
 }
+
+resource "proxmox_vm_qemu" "nas_vm" {
+  # Clone and metadata config
+  name        = "nas-server"
+  target_node = "pve"
+  os_type     = "ubuntu"
+  clone       = "ubuntu-server-docker"
+  full_clone  = true
+  desc        = "Nas Server VM"
+
+  onboot = "true"
+  tags   = "storage"
+
+  agent = 1
+
+  disks {
+    scsi {
+      scsi0 {
+        disk {
+          size    = 128
+          storage = "local-lvm"
+        }
+      }
+    }
+  }
+
+  # System
+  memory = 1024
+  cores  = 1
+
+  # LAN
+  network {
+    model  = "virtio"
+    bridge = "vmbr1"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      disk,
+      qemu_os
+    ]
+  }
+  ipconfig0 = "ip=dhcp"
+}
+
+# resource "proxmox_vm_qemu" "home-assistant-vm" {
+#   # Clone and metadata config
+#   name        = "home-assistant"
+#   target_node = "pve"
+#   os_type     = "ubuntu"
+#   clone       = "ubuntu-server-docker"
+#   full_clone  = false
+
+
+#   onboot = "true"
+#   tags   = "home-assistant"
+
+#   agent = 1
+
+#   # System
+#   memory = 4096
+#   cores  = 1
+
+#   # LAN
+#   network {
+#     model  = "virtio"
+#     bridge = "vmbr1"
+#   }
+
+
+#   lifecycle {
+#     ignore_changes = [
+#       desc,
+#       qemu_os,
+#       full_clone,
+#       disk,
+#     ]
+#   }
+
+#   disk {
+#     type    = "scsi"
+#     storage = "local-lvm"
+#     size    = "10G"
+#   }
+
+#   ipconfig0 = "ip=dhcp"
+# }
