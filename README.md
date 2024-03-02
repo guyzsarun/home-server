@@ -10,7 +10,7 @@ Proxmox Virtual Environment (Proxmox VE) for running VMs and Kubernetes Cluster 
 
 - [Diagram](#home-server-diagram)
 - [Product Structure](#project-structure)
-- [Pfsense Router](#pfsense-router)
+- [OPNsense Router](#opnsense-router)
 - [Jumphost VM](#jumphost-vm)
 - [Kubernetes Cluster](#kubernetes-cluster)
   - [Authentication](#authentication)
@@ -42,22 +42,26 @@ Proxmox Virtual Environment (Proxmox VE) for running VMs and Kubernetes Cluster 
 ```
 
 
-## Pfsense Router
-Pfsense router with zerotier plugin for VPC
+## OPNsense Router
+OPNsense router with zerotier plugin for VPC
 
-Start and Join zerotier network
-```
-zerotier-one -d
-zerotier-cli join XXXXX
-
-# Check network status
-zerotier-cli status
-```
+**Default Credentials**
+- username: root
+- password: opnsense
 
 **Network Interface**
-1. WAN - Linux Bridge ( vtnet0 )
-2. LAN - VM Network   ( vtnet1 )
-3. OPT - Zerotier Network ( zte... )
+| Interface | Network | Description | IP |
+|-----------|---------|-------------|----|
+| LAN       | vtnet0  |  Linux Bridge | 192.168.0.1/24 |
+| OPT       | vtnet1  |  VM Network | 172.16.0.0/16 |
+| OPT1      | zt0     | Zerotier Network | - |
+
+### OPNsense Plugin Setup
+1. Update OPNsense to the latest version `System > Firmware > Updates`
+2. Install `os-qemu-guest-agent` and `os-zerotier `
+3. Join Zerotier Network `VPN > Zerotier > Join Network`
+4. Setup Network Interface or Import from previous backup
+
 
 ## Jumphost VM
 
