@@ -14,8 +14,8 @@ https:
 #  # https port for harbor, default is 443
   port: 443
 #  # The path of cert and key files for nginx
-  certificate: /home/devops/certs/k8s.proxmox.local.crt
-  private_key: /home/devops/certs/k8s.proxmox.local.key
+  certificate: /home/devops/certs/server.proxmox.local.pem
+  private_key: /home/devops/certs/server.proxmox.local.key
 
 # # Uncomment following will enable tls communication between all harbor components
 # internal_tls:
