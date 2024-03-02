@@ -16,8 +16,8 @@
       - file:
           path: /home/devops/nfs_share
           state: directory
-          owner: nobody
-          group: nogroup
+          owner: devops
+          group: devops
           mode: '0775'
       - name: enable rpcbind nfslock nfs
         service:

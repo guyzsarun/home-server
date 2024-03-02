@@ -2,25 +2,36 @@
 - name: Install Server
   hosts: ubuntu-server
   gather_facts: true
-  become: true
   vars:
-    HARBOR_VERSION: v2.8.2
+    HARBOR_VERSION: v2.10.0
     VAULT_KEY_SHARE: 5
     VAULT_KEY_THRES: 3
-    ZEROTIER_NETWORK_ID:
     APP_BASE: ./config/certs/k8s.proxmox.local
 
   tasks:
   - name: Install essentials
-    apt:
-      name:
-        - docker
-        - net-tools
-        - gpg
-        - docker-compose
-        - prometheus-node-exporter
-      state: present
-      update_cache: yes
+    block:
+    - apt:
+        name:
+          - docker
+          - net-tools
+          - gpg
+          - docker-compose
+          - prometheus-node-exporter
+          - nfs-common
+        state: present
+        update_cache: yes
+    - name: Create "docker" group
+      group:
+        name: docker
+        state: present
+    #sudo usermod -aG docker root
+    - name: Add remote "ubuntu" user to "docker" group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+    become: true
     tags:
     - init
 
@@ -38,25 +49,18 @@
 
   - name: Install, Config Zerotier
     tags: zerotier
-    block:
-      - shell: |
-          curl -s https://install.zerotier.com | sudo bash
+    import_tasks: install-zerotier.yaml
 
-      - name: Start Zerotier
-        systemd:
-          name: zerotier-one
-          state: restarted
-          enabled: true
-          daemon_reload: true
-
-      - name: Join Network
-        shell: |
-          zerotier-cli join {{ ZEROTIER_NETWORK_ID }}
-
+  - name: Mount NFS
+    tags: nfs
+    import_tasks: mount-nfs.yaml
 
   - name: Install, Config Harbor
     tags: harbor
     block:
+      - file:
+          path: /mnt/nfs_share/harbor
+          state: directory
       - unarchive:
           src: https://github.com/goharbor/harbor/releases/download/{{ HARBOR_VERSION }}/harbor-offline-installer-{{ HARBOR_VERSION }}.tgz
           dest: /tmp
@@ -139,27 +143,3 @@
 
       - debug:
           msg: "export VAULT_ADDR=http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8200"
-
-  - name: Install, Config NFS
-    tags: nfs
-    block:
-      - apt:
-          name:
-          - nfs-kernel-server
-          state: present
-      - file:
-          path: /home/devops/nfs_share
-          state: directory
-          owner: nobody
-          group: nogroup
-          mode: '0775'
-      - name: enable rpcbind nfslock nfs
-        service:
-          name:  nfs-kernel-server
-          enabled: yes
-      - name: Copy exports file.
-        copy:
-          src: ./config/nfs_exports
-          dest: /etc/exports
-      - name: NFS apply change configrue
-        shell: systemctl reload nfs;exportfs -a
