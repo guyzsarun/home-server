@@ -6,11 +6,6 @@ proxmox_config = {
   proxmox_ssh_user =
 }
 
-# pfsense
-pfsense = {
-  "version" = "2.5.2"
-}
-
 # talos kubernetes cluster
 talos = {
   "version" = "v1.4.4"

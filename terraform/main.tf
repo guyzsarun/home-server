@@ -29,16 +29,12 @@ module "kubernetes-addons" {
 
 module "vm-templates" {
   source = "./modules/vm-templates"
-
-  pfsense        = var.pfsense
   proxmox_config = var.proxmox_config
 }
 
 module "vm" {
   source = "./modules/vm"
-
-  pfsense        = var.pfsense
   proxmox_config = var.proxmox_config
 
-  # depends_on = [module.vm-templates]
+  depends_on = [module.vm-templates]
 }
