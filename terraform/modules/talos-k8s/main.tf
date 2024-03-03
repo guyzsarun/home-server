@@ -25,9 +25,9 @@ resource "null_resource" "talos_base_image" {
 
 resource "proxmox_vm_qemu" "kubernetes-master_vm" {
   # Clone and metadata config
-  count   = var.talos.master_count
-  name    = "kubernetes-master-${count.index + 1}"
-  vmid    = count.index + 300
+  count       = var.talos.master_count
+  name        = "kubernetes-master-${count.index + 1}"
+  vmid        = count.index + 300
   target_node = "pve"
   qemu_os     = "other"
 
