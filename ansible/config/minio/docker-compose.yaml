@@ -9,10 +9,10 @@ services:
     restart: always
     hostname: server.proxmox.local
     volumes:
-      - ./data:/data
-      - /home/devops/certs/proxmox.local.crt:/root/.minio/certs/CAs/myCA.crt:ro
-      - /home/devops/certs/k8s.proxmox.local.crt:/root/.minio/certs/public.crt:ro
-      - /home/devops/certs/k8s.proxmox.local.key:/root/.minio/certs/private.key:ro
+      - /mnt/nfs_share/minio:/data
+      - /home/devops/certs/proxmox.local.pem:/root/.minio/certs/CAs/myCA.crt:ro
+      - /home/devops/certs/server.proxmox.local.pem:/root/.minio/certs/public.crt:ro
+      - /home/devops/certs/server.proxmox.local.key:/root/.minio/certs/private.key:ro
     environment:
       MINIO_ROOT_USER: minio
       MINIO_ROOT_PASSWORD: P@ssw0rd
