@@ -1,0 +1,7 @@
+---
+- hosts: proxmox
+  become: yes
+  tasks:
+  - name: Update hostname
+    hostname:
+      name: "{{ inventory_hostname }}"
