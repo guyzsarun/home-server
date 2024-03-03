@@ -1,0 +1,15 @@
+- name: Install, Config Zerotier
+  block:
+    - shell: |
+        curl -s https://install.zerotier.com | sudo bash
+
+    - name: Start Zerotier
+      systemd:
+        name: zerotier-one
+        state: restarted
+        enabled: true
+        daemon_reload: true
+
+    - name: Join Network
+      shell: |
+        zerotier-cli join {{ ZEROTIER_NETWORK_ID }}
