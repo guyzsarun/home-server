@@ -82,7 +82,7 @@ resource "proxmox_vm_qemu" "ubuntu-server_vm" {
   }
 
   # System
-  memory = 2048
+  memory = 4096
   cores  = 2
 
   # LAN
