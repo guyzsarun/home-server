@@ -6,13 +6,6 @@ module "talos-k8s" {
 
 }
 
-module "talos-patch" {
-  source = "./modules/talos-patch"
-
-  talos      = var.talos
-  depends_on = [module.talos-k8s]
-}
-
 module "kubernetes" {
   source = "./modules/kubernetes"
 
@@ -28,12 +21,12 @@ module "kubernetes-addons" {
 }
 
 module "vm-templates" {
-  source = "./modules/vm-templates"
+  source         = "./modules/vm-templates"
   proxmox_config = var.proxmox_config
 }
 
 module "vm" {
-  source = "./modules/vm"
+  source         = "./modules/vm"
   proxmox_config = var.proxmox_config
 
   depends_on = [module.vm-templates]
