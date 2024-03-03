@@ -20,6 +20,7 @@ variable "talos" {
   type = any
   default = {
     "version"      = "v1.4.4"
+    "master_count" = 1
     "worker_count" = 2
   }
 }
