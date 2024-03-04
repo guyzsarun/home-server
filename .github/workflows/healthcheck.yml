@@ -14,6 +14,7 @@ env:
 jobs:
   healthcheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
     - name: zerotier login
       uses: zerotier/github-action@v1.0.1
