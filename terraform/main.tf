@@ -10,7 +10,6 @@ module "kubernetes" {
   source = "./modules/kubernetes"
 
   nfs_k8s_storage = var.nfs_k8s_storage
-  depends_on      = [module.talos-patch]
 }
 
 module "kubernetes-addons" {
