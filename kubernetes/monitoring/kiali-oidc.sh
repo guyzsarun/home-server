@@ -1,0 +1,1 @@
+kubectl create secret generic kiali --from-literal="oidc-secret=F42AiYs6NR4M49s40YoOMGoxKPaYTvOp" -n istio-system
