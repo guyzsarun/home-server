@@ -14,7 +14,7 @@ spec:
     hosts:
     - "*"
     tls:
-      credentialName: k8s-gateway-credential
+      credentialName: k8s-gateway-tls
       mode: SIMPLE
   # - port:
   #     number: 80
