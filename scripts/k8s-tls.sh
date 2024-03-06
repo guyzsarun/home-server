@@ -1,0 +1,1 @@
+kubectl create secret tls k8s-gateway-tls  --key=k8s.proxmox.local.key --cert=k8s.proxmox.local.pem --dry-run=client -o yaml
