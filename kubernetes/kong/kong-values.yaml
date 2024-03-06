@@ -23,7 +23,7 @@ proxy:
     enabled: true
 
 secretVolumes:
-  - kong-proxy-tls
+  - k8s-gateway-tls
 
 env:
   prefix: /kong_prefix/
@@ -35,8 +35,14 @@ env:
   pg_database: "kong"
   pg_ssl: "off"
   pg_ssl_verify: "off"
-  ssl_cert: /etc/secrets/kong-proxy-tls/tls.crt
-  ssl_cert_key: /etc/secrets/kong-proxy-tls/tls.key
+  ssl_cert: /etc/secrets/k8s-gateway-tls/tls.crt
+  ssl_cert_key: /etc/secrets/k8s-gateway-tls/tls.key
+  proxy_stream_access_log: "off"
+
+readinessProbe:
+  periodSeconds: 30
+livenessProbe:
+  periodSeconds: 30
 
 
 extraObjects:
@@ -65,7 +71,7 @@ extraObjects:
       global: 'true'
   config:
     http_endpoint: http://zipkin.istio-system.svc.cluster.local:9411/api/v2/spans
-    sample_ratio: 1
+    sample_ratio: 0.25
     include_credential: true
     default_header_type: 'jaeger'
     header_type: 'jaeger'
