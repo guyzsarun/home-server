@@ -59,31 +59,6 @@ resource "helm_release" "nfs-storage" {
     name  = "storageClass.defaultClass"
     value = "true"
   }
-
-}
-
-resource "kubectl_manifest" "metallb-pool" {
-  override_namespace = kubernetes_namespace.metallb.metadata[0].name
-  yaml_body          = <<YAML
-  apiVersion: "metallb.io/v1beta1"
-  kind: IPAddressPool
-  metadata:
-    name: metallb-pool
-  spec:
-    addresses: ["192.168.101.1-192.168.101.50"]
-  YAML
-  depends_on         = [helm_release.metallb]
-}
-
-resource "kubectl_manifest" "metallb-l2-advertisement" {
-  override_namespace = kubernetes_namespace.metallb.metadata[0].name
-  yaml_body          = <<YAML
-  apiVersion: "metallb.io/v1beta1"
-  kind: L2Advertisement
-  metadata:
-    name: metallb-l2-ip
-  YAML
-  depends_on         = [kubectl_manifest.metallb-pool, helm_release.metallb]
 }
 
 data "http" "kubelet-approver" {
