@@ -32,7 +32,7 @@ resource "proxmox_vm_qemu" "kubernetes-master_vm" {
   qemu_os     = "other"
 
   onboot = true
-  tags   = "kubernetes,master"
+  tags   = "kubernetes;master"
 
   iso = "local:iso/talos-kubernetes-${var.talos.version}.iso"
 
@@ -74,7 +74,7 @@ resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
 
   target_node = "pve"
   onboot      = true
-  tags        = "kubernetes,worker"
+  tags        = "kubernetes;worker"
 
   iso = "local:iso/talos-kubernetes-${var.talos.version}.iso"
 
