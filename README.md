@@ -97,32 +97,31 @@ terraform -chdir=./terraform plan
 
 terraform -chdir=./terraform apply -target module.talos-k8s
 ```
-2. Update talos kubernetes master/worker ip in `terraform.tfvars` 
-```
-talos_master_ip = ""
-talos_worker_ip = [ "" ]
-```
-3. Initialize/Patch Talos Kubernetes cluster
+2. Bootstrap Kubernetes Cluster, refer to [talos](./terraform/talos/README.md) directory for more details
 
-```
-terraform -chdir=./terraform apply -target module.talos-patch
-```
-4. Apply Kubernetes cluster essentials ( metrics-server / loadbalancer / nfs storage provisioner )
+3. Apply Kubernetes cluster essentials ( metrics-server / loadbalancer / nfs storage provisioner )
 ```
 terraform -chdir=./terraform apply -target module.kubernetes
 ```
 
-5. Apply base kubernetes cluster config / addons
+4. Update the VM network LoadBalancer IP in `kubernetes/loadbalancer/metallb-address.yaml`
 ```
-terraform -chdir=./terraform apply -target module.kubernetes-addons
+kubectl apply -f ./kubernetes/loadbalancer
 ```
 ### Authentication
 
-Install keycloak OIDC with Postgresql
+Install Keycloak OIDC and PostgreSQL
 ```
+kubectl apply -f ./kubernetes/db/postgres.yaml
 kubectl apply -f ./kubernetes/keycloak/keycloak.yaml
 ```
 Keycloak client for application available in `./kubernetes/keycloak/client`
+
+### Addons
+Apply base kubernetes addons
+```
+terraform -chdir=./terraform apply -target module.kubernetes-addons
+```
 
 ### Service Mesh and  API Gateway
 
@@ -131,10 +130,8 @@ Install Mesh components and Patch Kong UI
 kubectl apply -f ./kubernetes/monitoring/kiali.yaml 
 kubectl apply -f ./kubernetes/monitoring/jaeger.yaml 
 
-
 kubectl patch svc/kong-gateway-kong-manager --patch-file=./kubernetes/kong/kong-patch.yaml
 ```
-
 ## Terraform Diagram
 
 Generated using [rover](https://github.com/im2nguyen/rover)
