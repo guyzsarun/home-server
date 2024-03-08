@@ -44,3 +44,6 @@ certs
 backup
 kubeconfig
 talosconfig
+
+*.pem
+*.key
