@@ -40,16 +40,6 @@ resource "helm_release" "elastic-operator" {
   namespace = kubernetes_namespace.istio-system.metadata[0].name
 }
 
-data "kubectl_path_documents" "elk" {
-  pattern = "../kubernetes/elk/*.yaml"
-}
-
-resource "kubectl_manifest" "elk-kibana" {
-  for_each           = toset(data.kubectl_path_documents.elk.documents)
-  yaml_body          = each.value
-  override_namespace = kubernetes_namespace.istio-system.metadata[0].name
-}
-
 resource "helm_release" "kube-prom-stack" {
   name       = "monitoring"
   repository = "https://prometheus-community.github.io/helm-charts"
@@ -108,4 +98,23 @@ resource "kubernetes_namespace" "istio-system" {
       "pod-security.kubernetes.io/warn"    = "privileged"
     }
   }
+}
+
+resource "kubernetes_namespace" "argocd" {
+  metadata {
+    name = "argocd"
+  }
+}
+
+resource "helm_release" "argocd" {
+  name       = "argo"
+  repository = "https://argoproj.github.io/argo-helm"
+  chart = "argo-cd"
+  version = "6.6.0"
+
+  namespace = kubernetes_namespace.argocd.metadata[0].name
+
+  values = [
+    "${file("../kubernetes/argocd/argo-values.yaml")}"
+  ]
 }
