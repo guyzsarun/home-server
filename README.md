@@ -132,6 +132,14 @@ kubectl apply -f ./kubernetes/monitoring/jaeger.yaml
 
 kubectl patch svc/kong-gateway-kong-manager --patch-file=./kubernetes/kong/kong-patch.yaml
 ```
+
+### Monitoring
+Install Elastic and Kibana
+```
+kubectl apply -f ./kubernetes/elk/elastic.yaml
+kubectl apply -f ./kubernetes/elk/kibana.yaml
+```
+
 ## Terraform Diagram
 
 Generated using [rover](https://github.com/im2nguyen/rover)
