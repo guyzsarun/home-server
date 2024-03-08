@@ -45,7 +45,7 @@ config:
 
         Host elastic-es-http.istio-system.svc.cluster.local
         Port 9200
-        Cloud_auth elastic:17Y0gjxE3JIDcW05K730S9lo
+        Cloud_auth elastic:s9Fd9N12eX802zUh0wq10WEq
 
         Time_Key  @timestamp
         Index fluent-bit-kube
