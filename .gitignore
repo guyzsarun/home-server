@@ -42,3 +42,8 @@ terraform.rc
 certs
 
 backup
+kubeconfig
+talosconfig
+
+*.pem
+*.key

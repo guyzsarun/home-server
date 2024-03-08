@@ -1,0 +1,32 @@
+---
+- name: Install NAS
+  hosts: nas-server
+  become: true
+
+  tasks:
+  - import_tasks: install-zerotier.yaml
+
+  - name: Install, Config NFS
+    block:
+      - apt:
+          name:
+          - nfs-kernel-server
+          - prometheus-node-exporter
+          state: present
+      - file:
+          path: /home/devops/nfs_share
+          state: directory
+          owner: devops
+          group: devops
+          mode: '0775'
+      - name: enable rpcbind nfslock nfs
+        service:
+          name:  nfs-kernel-server
+          enabled: yes
+      - name: Copy exports file.
+        copy:
+          dest: /etc/exports
+          content: |
+            /home/devops/nfs_share            *(rw,sync,no_subtree_check,no_root_squash)
+      - name: NFS apply change configrue
+        shell: systemctl reload nfs;exportfs -a

@@ -2,25 +2,36 @@
 - name: Install Server
   hosts: ubuntu-server
   gather_facts: true
-  become: true
   vars:
-    HARBOR_VERSION: v2.8.2
+    HARBOR_VERSION: v2.10.0
     VAULT_KEY_SHARE: 5
     VAULT_KEY_THRES: 3
-    ZEROTIER_NETWORK_ID:
-    APP_BASE: ./config/certs/k8s.proxmox.local
+    APP_BASE: ./config/certs/server.proxmox.local
 
   tasks:
   - name: Install essentials
-    apt:
-      name:
-        - docker
-        - net-tools
-        - gpg
-        - docker-compose
-        - prometheus-node-exporter
-      state: present
-      update_cache: yes
+    block:
+    - apt:
+        name:
+          - docker
+          - net-tools
+          - gpg
+          - docker-compose
+          - prometheus-node-exporter
+          - nfs-common
+        state: present
+        update_cache: yes
+    - name: Create "docker" group
+      group:
+        name: docker
+        state: present
+    #sudo usermod -aG docker root
+    - name: Add remote "ubuntu" user to "docker" group
+      user:
+        name: "{{ ansible_user }}"
+        groups: docker
+        append: yes
+    become: true
     tags:
     - init
 
@@ -30,33 +41,31 @@
       dest: /home/devops/certs/
       src: "{{ item }}"
     loop:
-      - "{{ APP_BASE }}.crt"
+      - "{{ APP_BASE }}.pem"
       - "{{ APP_BASE }}.key"
-      - "./config/certs/proxmox.local.crt"
+      - "./config/certs/proxmox.local.pem"
     tags: ssl
 
 
   - name: Install, Config Zerotier
     tags: zerotier
-    block:
-      - shell: |
-          curl -s https://install.zerotier.com | sudo bash
+    import_tasks: install-zerotier.yaml
 
-      - name: Start Zerotier
-        systemd:
-          name: zerotier-one
-          state: restarted
-          enabled: true
-          daemon_reload: true
-
-      - name: Join Network
-        shell: |
-          zerotier-cli join {{ ZEROTIER_NETWORK_ID }}
-
+  - name: Mount NFS
+    tags: nfs
+    ansible.posix.mount:
+      src: 172.16.0.4:/home/devops/nfs_share
+      path: /mnt/nfs_share
+      opts: rw,sync
+      state: mounted
+      fstype: nfs
 
   - name: Install, Config Harbor
     tags: harbor
     block:
+      - file:
+          path: /mnt/nfs_share/harbor
+          state: directory
       - unarchive:
           src: https://github.com/goharbor/harbor/releases/download/{{ HARBOR_VERSION }}/harbor-offline-installer-{{ HARBOR_VERSION }}.tgz
           dest: /tmp
@@ -73,14 +82,17 @@
     tags: minio
     block:
       - file:
-          path: /home/devops/minio/data
+          path: /mnt/nfs_share/minio
+          state: directory
+      - file:
+          path: /home/devops/minio
           state: directory
       - copy:
-          src: ./config/minio/minio.yaml
-          dest: /home/devops/minio
+          src: ./config/minio/docker-compose.yaml
+          dest: /home/devops/minio/docker-compose.yaml
       - shell:
             chdir: /home/devops/minio/
-            cmd: docker-compose -f minio.yaml up -d
+            cmd: docker-compose -f docker-compose.yaml up -d
 
   - name: Install, Config vault
     tags: vault
@@ -88,14 +100,16 @@
       - shell: |
             wget -O- https://apt.releases.hashicorp.com/gpg | sudo gpg --yes --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-      - apt:
+      - name: Install vault
+        become: yes
+        apt:
           name:
             - vault=1.15.*
           state: present
           update_cache: yes
 
       - file:
-          path: /home/devops/vault/data
+          path: /mnt/nfs_share/vault
           state: directory
 
       - copy:
@@ -103,6 +117,7 @@
           dest: /home/devops/vault
 
       - name: Copy systemd init file
+        become: yes
         copy:
           src: ./config/vault/vault.service
           dest: /etc/systemd/system
@@ -110,6 +125,7 @@
           group: devops
 
       - name: Start vault
+        become: yes
         systemd:
           name: vault
           state: restarted
@@ -139,27 +155,3 @@
 
       - debug:
           msg: "export VAULT_ADDR=http://{{ hostvars[inventory_hostname]['ansible_default_ipv4']['address'] }}:8200"
-
-  - name: Install, Config NFS
-    tags: nfs
-    block:
-      - apt:
-          name:
-          - nfs-kernel-server
-          state: present
-      - file:
-          path: /home/devops/nfs_share
-          state: directory
-          owner: nobody
-          group: nogroup
-          mode: '0775'
-      - name: enable rpcbind nfslock nfs
-        service:
-          name:  nfs-kernel-server
-          enabled: yes
-      - name: Copy exports file.
-        copy:
-          src: ./config/nfs_exports
-          dest: /etc/exports
-      - name: NFS apply change configrue
-        shell: systemctl reload nfs;exportfs -a

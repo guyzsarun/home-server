@@ -10,7 +10,7 @@ Proxmox Virtual Environment (Proxmox VE) for running VMs and Kubernetes Cluster 
 
 - [Diagram](#home-server-diagram)
 - [Product Structure](#project-structure)
-- [Pfsense Router](#pfsense-router)
+- [OPNsense Router](#opnsense-router)
 - [Jumphost VM](#jumphost-vm)
 - [Kubernetes Cluster](#kubernetes-cluster)
   - [Authentication](#authentication)
@@ -42,22 +42,26 @@ Proxmox Virtual Environment (Proxmox VE) for running VMs and Kubernetes Cluster 
 ```
 
 
-## Pfsense Router
-Pfsense router with zerotier plugin for VPC
+## OPNsense Router
+OPNsense router with zerotier plugin for VPC
 
-Start and Join zerotier network
-```
-zerotier-one -d
-zerotier-cli join XXXXX
-
-# Check network status
-zerotier-cli status
-```
+**Default Credentials**
+- username: root
+- password: opnsense
 
 **Network Interface**
-1. WAN - Linux Bridge ( vtnet0 )
-2. LAN - VM Network   ( vtnet1 )
-3. OPT - Zerotier Network ( zte... )
+| Interface | Network | Description | IP |
+|-----------|---------|-------------|----|
+| LAN       | vtnet0  |  Linux Bridge | 192.168.0.1/24 |
+| OPT       | vtnet1  |  VM Network | 172.16.0.0/16 |
+| OPT1      | zt0     | Zerotier Network | - |
+
+### OPNsense Plugin Setup
+1. Update OPNsense to the latest version `System > Firmware > Updates`
+2. Install `os-qemu-guest-agent` and `os-zerotier `
+3. Join Zerotier Network `VPN > Zerotier > Join Network`
+4. Setup Network Interface or Import from previous backup
+
 
 ## Jumphost VM
 
@@ -93,32 +97,31 @@ terraform -chdir=./terraform plan
 
 terraform -chdir=./terraform apply -target module.talos-k8s
 ```
-2. Update talos kubernetes master/worker ip in `terraform.tfvars` 
-```
-talos_master_ip = ""
-talos_worker_ip = [ "" ]
-```
-3. Initialize/Patch Talos Kubernetes cluster
+2. Bootstrap Kubernetes Cluster, refer to [talos](./terraform/talos/README.md) directory for more details
 
-```
-terraform -chdir=./terraform apply -target module.talos-patch
-```
-4. Apply Kubernetes cluster essentials ( metrics-server / loadbalancer / nfs storage provisioner )
+3. Apply Kubernetes cluster essentials ( metrics-server / loadbalancer / nfs storage provisioner )
 ```
 terraform -chdir=./terraform apply -target module.kubernetes
 ```
 
-5. Apply base kubernetes cluster config / addons
+4. Update the VM network LoadBalancer IP in `kubernetes/loadbalancer/metallb-address.yaml`
 ```
-terraform -chdir=./terraform apply -target module.kubernetes-addons
+kubectl apply -f ./kubernetes/loadbalancer
 ```
 ### Authentication
 
-Install keycloak OIDC with Postgresql
+Install Keycloak OIDC and PostgreSQL
 ```
+kubectl apply -f ./kubernetes/db/postgres.yaml
 kubectl apply -f ./kubernetes/keycloak/keycloak.yaml
 ```
 Keycloak client for application available in `./kubernetes/keycloak/client`
+
+### Addons
+Apply base kubernetes addons
+```
+terraform -chdir=./terraform apply -target module.kubernetes-addons
+```
 
 ### Service Mesh and  API Gateway
 
@@ -127,8 +130,14 @@ Install Mesh components and Patch Kong UI
 kubectl apply -f ./kubernetes/monitoring/kiali.yaml 
 kubectl apply -f ./kubernetes/monitoring/jaeger.yaml 
 
-
 kubectl patch svc/kong-gateway-kong-manager --patch-file=./kubernetes/kong/kong-patch.yaml
+```
+
+### Monitoring
+Install Elastic and Kibana
+```
+kubectl apply -f ./kubernetes/elk/elastic.yaml
+kubectl apply -f ./kubernetes/elk/kibana.yaml
 ```
 
 ## Terraform Diagram

@@ -4,5 +4,5 @@
 192.168.101.1 argo.proxmox.local
 192.168.101.3 kong.proxmox.local
 192.168.101.4 gateway.proxmox.local
-10.243.100.1  pfsense.proxmox.local
-10.243.100.10  ve.proxmox.local
+10.243.100.1  opnsense.proxmox.local
+10.243.100.160  ve.proxmox.local

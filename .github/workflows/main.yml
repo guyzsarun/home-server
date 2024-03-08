@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
 
 env:
-  K8S_IGNORE_LINT: 'application\|project\|istio\|kong\|elastic\|kibana\|values'
+  K8S_IGNORE_LINT: 'application\|project\|istio\|kong\|elastic\|kibana\|loadbalancer\|values'
   TERRAFORM_COMMAND: 'terraform -chdir=./terraform'
 
 jobs:

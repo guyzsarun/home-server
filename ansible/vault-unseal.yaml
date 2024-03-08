@@ -1,0 +1,15 @@
+---
+- name: Unsealed Vault
+  hosts: local
+  vars:
+    VAULT_KEY_THRES: 3
+    VAULT_CONFIG_FILE: ./config/vault/token
+
+
+  tasks:
+    - name: Unseal vault
+      shell: |
+          vault operator unseal {{ item }}
+      loop: "{{ contents.unseal_keys_b64[:3] }}"
+      vars:
+        contents: "{{ lookup('file', VAULT_CONFIG_FILE ) | from_yaml }} "

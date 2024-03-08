@@ -1,0 +1,7 @@
+-   op: add
+    path: /machine/registries
+    value:
+      config:
+        server.proxmox.local:
+          tls:
+            insecureSkipVerify: true

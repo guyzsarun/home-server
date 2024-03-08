@@ -11,8 +11,8 @@ source "proxmox-iso" "ubuntu-server-docker" {
     insecure_skip_tls_verify = true
 
     # Base ISO File configuration
-    iso_url = "https://releases.ubuntu.com/jammy/ubuntu-22.04.2-live-server-amd64.iso"
-    iso_checksum = "5e38b55d57d94ff029719342357325ed3bda38fa80054f9330dc789cd2d43931"
+    iso_url = "https://releases.ubuntu.com/jammy/ubuntu-22.04.4-live-server-amd64.iso"
+    iso_checksum = "45f873de9f8cb637345d6e66a583762730bbea30277ef7b32c9c3bd6700a32b2"
     iso_download_pve = true
     iso_storage_pool = "local"
     unmount_iso = true
@@ -27,7 +27,7 @@ source "proxmox-iso" "ubuntu-server-docker" {
 
     # Storage
     disks {
-         disk_size = "20G"
+         disk_size = "5G"
          storage_pool = "local-lvm"
          type = "scsi"
     }
@@ -88,7 +88,6 @@ build {
     provisioner "shell" {
          inline = [ "sudo cp /tmp/99-pve.cfg /etc/cloud/cloud.cfg.d/99-pve.cfg" ]
     }
-
 
     provisioner "shell" {
         inline = [

@@ -7,13 +7,14 @@ on:
 
 env:
   HOSTS: '
-    proxmox:10.243.100.10
+    proxmox:10.243.100.160
     '
 
 
 jobs:
   healthcheck:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
     - name: zerotier login
       uses: zerotier/github-action@v1.0.1

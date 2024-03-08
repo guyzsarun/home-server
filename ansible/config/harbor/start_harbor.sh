@@ -1,1 +1,1 @@
-sudo /home/devops/ansible/harbor/install.sh --with-trivy
+sudo /home/devops/harbor/install.sh --with-trivy
