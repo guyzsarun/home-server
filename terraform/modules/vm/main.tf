@@ -180,6 +180,13 @@ resource "proxmox_vm_qemu" "home-assistant_vm" {
     bridge = "vmbr1"
   }
 
+  # LAN
+  network {
+    model  = "virtio"
+    bridge = "vmbr0"
+  }
+
+
   lifecycle {
     ignore_changes = [
       disk,
