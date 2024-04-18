@@ -1,4 +1,5 @@
 - name: Install, Config Zerotier
+  become: true
   block:
     - shell: |
         curl -s https://install.zerotier.com | sudo bash

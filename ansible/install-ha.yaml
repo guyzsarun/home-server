@@ -1,0 +1,47 @@
+---
+- name: Install Home Assistant
+  hosts: home-assistant
+  gather_facts: true
+
+  tasks:
+  - import_tasks: install-zerotier.yaml
+
+  - name: Install essentials
+    become: true
+    apt:
+      name:
+        - docker
+        - docker-compose
+        - nfs-common
+      state: present
+
+  - name: Create "docker" group
+    group:
+      name: docker
+      state: present
+
+  #sudo usermod -aG docker root
+  - name: Add remote "ubuntu" user to "docker" group
+    user:
+      name: "{{ ansible_user }}"
+      groups: docker
+      append: yes
+    become: true
+
+  - name: Mount NFS
+    become: true
+    ansible.posix.mount:
+      src: 172.16.0.4:/home/devops/nfs_share/ha
+      path: /mnt/ha
+      opts: rw,sync
+      state: mounted
+      fstype: nfs
+
+  - name: Install, Config HA
+    block:
+      - copy:
+          src: ./config/home-assistant
+          dest: /mnt/ha
+      - shell:
+            chdir: /mnt/ha/home-assistant/
+            cmd: docker-compose -f docker-compose.yaml up -d

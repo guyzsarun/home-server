@@ -145,45 +145,54 @@ resource "proxmox_vm_qemu" "nas_vm" {
   ipconfig0 = "ip=dhcp"
 }
 
-# resource "proxmox_vm_qemu" "home-assistant-vm" {
-#   # Clone and metadata config
-#   name        = "home-assistant"
-#   target_node = "pve"
-#   os_type     = "ubuntu"
-#   clone       = "ubuntu-server-docker"
-#   full_clone  = false
+resource "proxmox_vm_qemu" "home-assistant_vm" {
+  # Clone and metadata config
+  name        = "home-assistant"
+  target_node = "pve"
+  os_type     = "ubuntu"
+  clone       = "ubuntu-server-docker"
+  full_clone  = true
+  desc        = "Home Assiatant VM"
+
+  onboot = "true"
+  tags   = ""
+
+  agent = 1
+
+  disks {
+    scsi {
+      scsi0 {
+        disk {
+          size    = 15
+          storage = "local-lvm"
+        }
+      }
+    }
+  }
+
+  # System
+  memory = 2048
+  cores  = 1
+
+  # LAN
+  network {
+    model  = "virtio"
+    bridge = "vmbr1"
+  }
+
+  # LAN
+  network {
+    model  = "virtio"
+    bridge = "vmbr0"
+  }
 
 
-#   onboot = "true"
-#   tags   = "home-assistant"
+  lifecycle {
+    ignore_changes = [
+      disk,
+      qemu_os
+    ]
+  }
 
-#   agent = 1
-
-#   # System
-#   memory = 4096
-#   cores  = 1
-
-#   # LAN
-#   network {
-#     model  = "virtio"
-#     bridge = "vmbr1"
-#   }
-
-
-#   lifecycle {
-#     ignore_changes = [
-#       desc,
-#       qemu_os,
-#       full_clone,
-#       disk,
-#     ]
-#   }
-
-#   disk {
-#     type    = "scsi"
-#     storage = "local-lvm"
-#     size    = "10G"
-#   }
-
-#   ipconfig0 = "ip=dhcp"
-# }
+  ipconfig0 = "ip=dhcp"
+}
