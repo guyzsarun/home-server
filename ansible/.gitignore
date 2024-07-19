@@ -1,4 +1,7 @@
 **/vault/token
+**/group_vars/**
+**/host_vars/**
+
 
 hosts
 ansible.cfg
