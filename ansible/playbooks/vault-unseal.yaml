@@ -1,6 +1,6 @@
 ---
-- name: Unsealed Vault
-  hosts: local
+- name: Unseal Vault
+  hosts: localhost
   vars:
     VAULT_KEY_THRES: 3
     VAULT_CONFIG_FILE: ./config/vault/token
