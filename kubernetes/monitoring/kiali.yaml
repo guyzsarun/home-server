@@ -35,8 +35,8 @@ data:
   config.yaml: |
     auth:
       openid:
-        client_id: "kiali-client"
-        issuer_uri: "https://k8s.proxmox.local/keycloak/realms/oidc"
+        client_id: "kiali-openid-client"
+        issuer_uri: "https://k8s.proxmox.local/keycloak/realms/keycloak-oidc"
         insecure_skip_verify_tls: true
         disable_rbac: true
         scopes: ["openid","email"]

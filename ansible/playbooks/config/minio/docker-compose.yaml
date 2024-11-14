@@ -19,8 +19,8 @@ services:
       MINIO_PROMETHEUS_AUTH_TYPE: public
       MINIO_SERVER_URL: https://server.proxmox.local:9000
       MINIO_BROWSER_REDIRECT_URL: https://server.proxmox.local:9090
-      MINIO_IDENTITY_OPENID_CONFIG_URL: "https://k8s.proxmox.local/keycloak/realms/oidc/.well-known/openid-configuration"
-      MINIO_IDENTITY_OPENID_CLIENT_ID: "minio-client"
+      MINIO_IDENTITY_OPENID_CONFIG_URL: "https://k8s.proxmox.local/keycloak/realms/keycloak-oidc/.well-known/openid-configuration"
+      MINIO_IDENTITY_OPENID_CLIENT_ID: "minio-openid-client"
       MINIO_IDENTITY_OPENID_CLIENT_SECRET: "mRhvqhigsF38FUVSOpLIqt38g534jFaW"
       MINIO_IDENTITY_OPENID_SCOPES: "openid,profile,email"
       MINIO_IDENTITY_OPENID_DISPLAY_NAME: "Keycloak OIDC Login"
