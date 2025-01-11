@@ -54,7 +54,7 @@ variable "k8s_addons" {
 
   default = {
     "istio_version"     = "1.19.3"
-    "kong_version"      = "2.29.0"
+    "kong_version"      = "2.46.0"
     "elk_version"       = "2.9.0"
     "kube-prom_version" = "48.3.1"
   }
