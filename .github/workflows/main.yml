@@ -45,7 +45,7 @@ jobs:
         run: "cd packer && packer validate ."
 
   terraform:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - uses: actions/checkout@v3
 
@@ -59,7 +59,7 @@ jobs:
         run: ${TERRAFORM_COMMAND} validate
 
   tflint:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: terraform
 
     steps:
