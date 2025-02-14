@@ -37,7 +37,7 @@ resource "proxmox_vm_qemu" "kubernetes-master_vm" {
   iso = "local:iso/talos-kubernetes-${var.talos.version}.iso"
 
   # System
-  memory = 2048
+  memory = 3072
   cores  = 2
   cpu    = "host"
   scsihw = "virtio-scsi-single"
@@ -79,7 +79,7 @@ resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
   iso = "local:iso/talos-kubernetes-${var.talos.version}.iso"
 
   # System
-  memory = 8192
+  memory = 9216
   cores  = 2
   cpu    = "host"
   scsihw = "virtio-scsi-single"
