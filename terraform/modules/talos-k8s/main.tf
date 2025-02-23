@@ -95,7 +95,7 @@ resource "proxmox_vm_qemu" "kubernetes-worker_vm" {
     scsi {
       scsi0 {
         disk {
-          size    = 10
+          size    = 20
           storage = "local-lvm"
         }
       }
