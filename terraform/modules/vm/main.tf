@@ -196,3 +196,47 @@ resource "proxmox_vm_qemu" "home-assistant_vm" {
 
   ipconfig0 = "ip=dhcp"
 }
+
+resource "proxmox_vm_qemu" "kong_gateway" {
+  # Clone and metadata config
+  name        = "kong-gateway"
+  target_node = "pve"
+  os_type     = "ubuntu"
+  clone       = "ubuntu-server-docker"
+  full_clone  = true
+  desc        = "Kong Gateway VM"
+
+  onboot = "true"
+  tags   = "gateway"
+
+  agent = 1
+
+  disks {
+    scsi {
+      scsi0 {
+        disk {
+          size    = 20
+          storage = "local-lvm"
+        }
+      }
+    }
+  }
+
+  # System
+  memory = 1024
+  cores  = 1
+
+  # LAN
+  network {
+    model  = "virtio"
+    bridge = "vmbr1"
+  }
+
+  lifecycle {
+    ignore_changes = [
+      disk,
+      qemu_os
+    ]
+  }
+  ipconfig0 = "ip=dhcp"
+}
